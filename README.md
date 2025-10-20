@@ -35,9 +35,80 @@ As principais regras implementadas no sistema são:
    - A multa deve ser quitada antes de novas locações  
    - Subdomínio: Controle de Empréstimos
 
-4. Validação de clientes antes da locação
-   - Apenas clientes ativos podem realizar locações
-   - Subdomínios: Gestão de Usuários + Controle de Empréstimos
+4. Validação de clientes antes de locação
+-Somente clientes ativos podem realizar locações.
+-Clientes bloqueados ou suspensos não conseguem iniciar novas locações.
+-A validação é feita no momento da confirmação do empréstimo.
+
+Funcionalidades relacionadas:
+-Ativar, suspender ou bloquear sócio
+-Realizar empréstimo
+
+
+Subdomínios relacionados:
+-Gestão de Usuários
+-Controle de Empréstimos
+
+
+5. Renovação condicionada à ausência de multas
+Um empréstimo só poderá ser renovado se:
+-O cliente não possuir multas pendentes;
+-Não houver atraso no empréstimo atual.
+-Caso alguma dessas condições não seja atendida, o sistema bloqueia a renovação e informa o motivo.
+
+
+Funcionalidades relacionadas:
+-Renovar empréstimo
+-Calcular multa
+
+
+
+Subdomínios relacionados:
+-Controle de Empréstimos
+-Gestão de Usuários
+
+
+6. Bloqueio automático de clientes inadimplentes
+Clientes com multas pendentes ficam automaticamente bloqueados para realizar novas locações ou renovações até regularizarem a situação.
+Caso tentem iniciar uma operação, o sistema deve negar e exibir uma mensagem clara informando a pendência.
+
+Funcionalidades relacionadas:
+Bloqueio automático de sócio com multas não pagas
+
+-Realizar empréstimo
+-Renovar empréstimo
+
+
+Subdomínios relacionados:
+-Gestão de Usuários
+-Controle de Empréstimos
+
+7. Limite de empréstimos simultâneos por cliente
+Cada cliente possui um limite máximo de empréstimos ativos simultaneamente (por exemplo, 3 mídias).
+Ao tentar realizar um novo empréstimo além desse limite, o sistema deve recusar a operação e informar o motivo.
+
+Funcionalidades relacionadas:
+-Realizar empréstimo
+-Listar empréstimos ativos e atrasados por sócio
+
+
+Subdomínios relacionados:
+-Gestão de Usuários
+-Controle de Empréstimos
+
+
+8. Registro obrigatório de condição física na devolução
+No momento de registrar uma devolução, o administrador deve informar obrigatoriamente a condição física do exemplar (bom, regular, danificado).
+Caso seja informado “danificado”, o sistema atualiza o status do exemplar para “indisponível” e impede novos empréstimos até que haja manutenção.
+
+Funcionalidades relacionadas:
+-Registrar devolução
+-Atualizar disponibilidade do exemplar
+
+
+Subdomínios relacionados:
+-Controle de Empréstimos
+-Gerenciamento de Catálogo
 
 
 APRESENTAÇÃO:
