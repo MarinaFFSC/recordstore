@@ -38,3 +38,11 @@ As principais regras implementadas no sistema são:
 4. Validação de clientes antes da locação
    - Apenas clientes ativos podem realizar locações
    - Subdomínios: Gestão de Usuários + Controle de Empréstimos
+
+
+APRESENTAÇÃO:
+https://www.canva.com/design/DAG2Dbp-Xrw/KDwSES5gceaxJBfvD2pDIw/view?utm_content=DAG2Dbp-Xrw&utm_campaign=designshare&utm_medium=link2&utm_source=uniquelinks&utlId=h8281444297
+
+PROTÓTIPO (FIGMA):
+
+
