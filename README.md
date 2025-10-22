@@ -7,7 +7,7 @@ O projeto implementa princípios de DDD (Domain-Driven Design) e BDD (Behavior-D
 
 O sistema tem como objetivo gerenciar acervo físico de mídias musicais, permitindo o controle completo do ciclo de locação:
 
-- Clientes: podem pesquisar o catálogo, realizar locações e acompanhar o histórico de empréstimos.  
+- Sócios: podem pesquisar o catálogo, realizar locações e acompanhar o histórico de empréstimos.  
 - Administradores: gerenciam o catálogo, usuários, reservas e devoluções.
 
 ### Subdomínios principais
@@ -35,23 +35,23 @@ As principais regras implementadas no sistema são:
    - A multa deve ser quitada antes de novas locações  
    - Subdomínio: Controle de Empréstimos
 
-4. Validação de clientes antes de locação
-   - Somente clientes ativos podem realizar locações.
+4. Validação de sócios antes de locação
+   - Somente sócios ativos podem realizar locações.
    - Clientes bloqueados ou suspensos não conseguem iniciar novas locações.
    - A validação é feita no momento da confirmação do empréstimo.
 
 5. Renovação condicionada à ausência de multas
    Um empréstimo só poderá ser renovado se:
-   - O cliente não possuir multas pendentes;
+   - O sócios não possuir multas pendentes;
    - Não houver atraso no empréstimo atual.
    - Caso alguma dessas condições não seja atendida, o sistema bloqueia a renovação e informa o motivo.
 
 6. Bloqueio automático de clientes inadimplentes
-   - Clientes com multas pendentes ficam automaticamente bloqueados para realizar novas locações ou renovações até regularizarem a situação.
+   - Sócios com multas pendentes ficam automaticamente bloqueados para realizar novas locações ou renovações até regularizarem a situação.
    - Caso tentem iniciar uma operação, o sistema deve negar e exibir uma mensagem clara informando a pendência.
 
 7. Limite de empréstimos simultâneos por cliente
-   - Cada cliente possui um limite máximo de empréstimos ativos simultaneamente (por exemplo, 3 mídias).
+   - Cada sócio possui um limite máximo de empréstimos ativos simultaneamente (por exemplo, 3 mídias).
    - Ao tentar realizar um novo empréstimo além desse limite, o sistema deve recusar a operação e informar o motivo.
 
 8. Registro obrigatório de condição física na devolução
@@ -62,5 +62,5 @@ APRESENTAÇÃO:
 https://www.canva.com/design/DAG2Dbp-Xrw/KDwSES5gceaxJBfvD2pDIw/view?utm_content=DAG2Dbp-Xrw&utm_campaign=designshare&utm_medium=link2&utm_source=uniquelinks&utlId=h8281444297
 
 PROTÓTIPO (FIGMA):
-
+https://www.figma.com/design/TM3M17MpYg7xxGHuBtwaS5/Requisitos-e-Valida%C3%A7%C3%A3o-Software?node-id=0-1&p=f
 
