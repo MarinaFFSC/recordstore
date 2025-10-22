@@ -30,4 +30,11 @@ public class CatalogoController {
 
   @GetMapping("/midias")
   public List<Midia> listar(){ return service.listarAcervo(); }
+  
+  @DeleteMapping("/midias/{id}")
+  @ResponseStatus(HttpStatus.NO_CONTENT)
+  public void removerMidia(@PathVariable Long id){
+      service.removerMidia(id);
+  }
+
 }

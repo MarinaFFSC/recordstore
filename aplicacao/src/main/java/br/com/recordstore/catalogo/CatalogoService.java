@@ -1,5 +1,6 @@
 package br.com.recordstore.catalogo;
 import org.springframework.stereotype.Service;
+import br.com.recordstore.emprestimos.StatusEmprestimo;
 import org.springframework.transaction.annotation.Transactional;
 import br.com.recordstore.common.BusinessException;
 import java.util.*;
@@ -45,4 +46,18 @@ public class CatalogoService {
   private Boolean emprestado(Long exemplarId){
     return empRepo.existsByExemplarIdAndStatus(exemplarId, br.com.recordstore.emprestimos.StatusEmprestimo.ATIVO);
   }
+  
+  @Transactional
+  public void removerMidia(Long midiaId){
+      Midia midia = midiaRepo.findById(midiaId)
+          .orElseThrow(() -> new BusinessException("Mídia não encontrada"));
+
+      for (Exemplar ex : midia.getExemplares()){
+          if (empRepo.existsByExemplarIdAndStatus(ex.getId(), StatusEmprestimo.ATIVO)){
+              throw new BusinessException("Não é possível remover a mídia: há exemplares emprestados");
+          }
+      }
+      midiaRepo.deleteById(midiaId);
+  }
+
 }

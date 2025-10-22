@@ -1,0 +1,5 @@
+br\com\recordstore\catalogo\TipoMidia.class
+br\com\recordstore\emprestimos\StatusEmprestimo.class
+br\com\recordstore\catalogo\CondicaoExemplar.class
+br\com\recordstore\catalogo\StatusExemplar.class
+br\com\recordstore\socios\StatusSocio.class

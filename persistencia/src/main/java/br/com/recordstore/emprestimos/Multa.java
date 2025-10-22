@@ -8,4 +8,5 @@ public class Multa {
   private BigDecimal valorPorDia;
   private Integer diasAtraso;
   private BigDecimal valorTotal;
+  private Boolean paga = Boolean.FALSE;
 }

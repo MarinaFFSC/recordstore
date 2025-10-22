@@ -3,6 +3,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.http.HttpStatus;
 import java.time.LocalDate;
 import java.util.*;
+import br.com.recordstore.catalogo.CondicaoExemplar;
 
 @RestController @RequestMapping("/api/emprestimos")
 public class EmprestimoController {
@@ -20,10 +21,13 @@ public class EmprestimoController {
     return service.renovarEmprestimo(id, LocalDate.parse(novaData));
   }
 
-  @PostMapping("/{id}/devolucao")
-  public Emprestimo devolver(@PathVariable Long id, @RequestParam String data, @RequestParam(defaultValue="false") boolean danificado){
-    return service.registrarDevolucao(id, LocalDate.parse(data), danificado);
-  }
+
+	@PostMapping("/{id}/devolucao")
+	public Emprestimo devolver(@PathVariable Long id,
+	                           @RequestParam String data,
+	                           @RequestParam CondicaoExemplar condicao) {
+	    return service.registrarDevolucao(id, LocalDate.parse(data), condicao);
+	}
 
   @GetMapping("/socio/{socioId}/ativos-atrasados")
   public List<Emprestimo> ativosEAtrasados(@PathVariable Long socioId){
@@ -34,4 +38,15 @@ public class EmprestimoController {
   public List<Emprestimo> historico(@PathVariable Long socioId){
     return service.historicoPorSocio(socioId);
   }
+  
+  @GetMapping("/exemplar/{exemplarId}/historico")
+  public List<Emprestimo> historicoPorExemplar(@PathVariable Long exemplarId){
+      return service.historicoPorExemplar(exemplarId);
+  }
+
+  @GetMapping("/midia/{midiaId}/historico")
+  public List<Emprestimo> historicoPorMidia(@PathVariable Long midiaId){
+      return service.historicoPorMidia(midiaId);
+  }
+
 }

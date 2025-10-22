@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<testsuite name="Cucumber" time="5.162" tests="16" skipped="0" failures="16" errors="0">
+<testcase classname="Media rental availability" name="A media item must be available to be rented - Available media -&gt; Loan allowed" time="0.004">
+<failure/>
+<system-out><![CDATA[
+Given there is a media item "CD - Abbey Road" with status "AVAILABLE".......undefined
+And there is an active member logged in.....................................skipped
+When the admin requests to rent the media...................................skipped
+Then the system should allow the loan.......................................skipped
+And the media status should change to "RENTED"..............................skipped
+]]></system-out>
+</testcase>
+<testcase classname="Media rental availability" name="A media item must be available to be rented - Not available media -&gt; Loan blocked" time="0.001">
+<failure/>
+<system-out><![CDATA[
+Given there is a media item "Vinyl - Thriller" with status "RENTED".........undefined
+And there is an active member logged in.....................................skipped
+When the admin requests to rent the media...................................skipped
+Then the system should block the loan.......................................skipped
+And an error "Media not available" should be shown..........................skipped
+]]></system-out>
+</testcase>
+<testcase classname="Member status requirements" name="Only active members can rent media - Active member -&gt; Allowed to rent" time="0.002">
+<failure/>
+<system-out><![CDATA[
+Given there is a member with status "ACTIVE"................................undefined
+And there is a media item "DVD - Inception" with status "AVAILABLE".........skipped
+When the admin requests to rent the media to this member....................skipped
+Then the system should allow the loan.......................................skipped
+]]></system-out>
+</testcase>
+<testcase classname="Member status requirements" name="Only active members can rent media - Inactive or suspended member -&gt; Blocked - #1.1" time="0.002">
+<failure/>
+<system-out><![CDATA[
+Given there is a member with status "INACTIVE"..............................undefined
+And there is a media item "DVD - Interstellar" with status "AVAILABLE"......skipped
+When the admin requests to rent the media to this member....................skipped
+Then the system should block the loan.......................................skipped
+And an error "Member not allowed to rent" should be shown...................skipped
+]]></system-out>
+</testcase>
+<testcase classname="Member status requirements" name="Only active members can rent media - Inactive or suspended member -&gt; Blocked - #1.2" time="0.002">
+<failure/>
+<system-out><![CDATA[
+Given there is a member with status "SUSPENDED".............................undefined
+And there is a media item "DVD - Interstellar" with status "AVAILABLE"......skipped
+When the admin requests to rent the media to this member....................skipped
+Then the system should block the loan.......................................skipped
+And an error "Member not allowed to rent" should be shown...................skipped
+]]></system-out>
+</testcase>
+<testcase classname="Member status requirements" name="Only active members can rent media - Inactive or suspended member -&gt; Blocked - #1.3" time="0.001">
+<failure/>
+<system-out><![CDATA[
+Given there is a member with status "IN_DEBT"...............................undefined
+And there is a media item "DVD - Interstellar" with status "AVAILABLE"......skipped
+When the admin requests to rent the media to this member....................skipped
+Then the system should block the loan.......................................skipped
+And an error "Member not allowed to rent" should be shown...................skipped
+]]></system-out>
+</testcase>
+<testcase classname="Item condition on return" name="Return must update status and condition appropriately - Return in good condition" time="0.001">
+<failure/>
+<system-out><![CDATA[
+Given there is a media item "Blu-ray - Matrix" with status "RENTED".........undefined
+And the loan exists for this item...........................................skipped
+When the admin registers the return with condition "GOOD"...................skipped
+Then the media status should change to "AVAILABLE"..........................skipped
+And no fine should be generated.............................................skipped
+]]></system-out>
+</testcase>
+<testcase classname="Item condition on return" name="Return must update status and condition appropriately - Return damaged" time="0.001">
+<failure/>
+<system-out><![CDATA[
+Given there is a media item "Blu-ray - Matrix Reloaded" with status "RENTED".undefined
+And the loan exists for this item...........................................skipped
+When the admin registers the return with condition "DAMAGED"................skipped
+Then the media status should change to "UNAVAILABLE"........................skipped
+And a business event "ItemDamaged" should be recorded.......................skipped
+]]></system-out>
+</testcase>
+<testcase classname="Fine calculation on late returns" name="Late returns generate fines based on days overdue - 0 days late -&gt; no fine" time="0.002">
+<failure/>
+<system-out><![CDATA[
+Given the daily fine amount is "2.50".......................................undefined
+Given there is a loan due on "2025-01-10"...................................skipped
+When the return date is "2025-01-10"........................................skipped
+Then the fine should be "0.00"..............................................skipped
+]]></system-out>
+</testcase>
+<testcase classname="Fine calculation on late returns" name="Late returns generate fines based on days overdue - 3 days late" time="0">
+<failure/>
+<system-out><![CDATA[
+Given the daily fine amount is "2.50".......................................undefined
+Given there is a loan due on "2025-01-10"...................................skipped
+When the return date is "2025-01-13"........................................skipped
+Then the fine should be "7.50"..............................................skipped
+]]></system-out>
+</testcase>
+<testcase classname="Fine calculation on late returns" name="Late returns generate fines based on days overdue - Variable late days - #1.1" time="0.001">
+<failure/>
+<system-out><![CDATA[
+Given the daily fine amount is "2.50".......................................undefined
+Given there is a loan due on "2025-02-01"...................................skipped
+When the return date is "2025-02-01"........................................skipped
+Then the fine should be "0.00"..............................................skipped
+]]></system-out>
+</testcase>
+<testcase classname="Fine calculation on late returns" name="Late returns generate fines based on days overdue - Variable late days - #1.2" time="0.001">
+<failure/>
+<system-out><![CDATA[
+Given the daily fine amount is "2.50".......................................undefined
+Given there is a loan due on "2025-02-01"...................................skipped
+When the return date is "2025-02-02"........................................skipped
+Then the fine should be "2.50"..............................................skipped
+]]></system-out>
+</testcase>
+<testcase classname="Fine calculation on late returns" name="Late returns generate fines based on days overdue - Variable late days - #1.3" time="0.001">
+<failure/>
+<system-out><![CDATA[
+Given the daily fine amount is "2.50".......................................undefined
+Given there is a loan due on "2025-02-01"...................................skipped
+When the return date is "2025-02-05"........................................skipped
+Then the fine should be "10.00".............................................skipped
+]]></system-out>
+</testcase>
+<testcase classname="Renewal only when there are no fines or delays" name="A loan can be renewed only if the member has no unpaid fines and the item is not overdue - Renewal allowed (no fines and not overdue)" time="0.002">
+<failure/>
+<system-out><![CDATA[
+Given there is a member with status "ACTIVE"................................undefined
+And there is a media item "Vinyl - A Love Supreme" with status "RENTED".....skipped
+And an existing loan for this item with due date "2025-01-10"...............skipped
+Given the member has no unpaid fines........................................skipped
+And today is "2025-01-09"...................................................skipped
+When the admin requests the renewal.........................................skipped
+Then the system should renew the loan.......................................skipped
+And the new due date should be extended by "7" days.........................skipped
+]]></system-out>
+</testcase>
+<testcase classname="Renewal only when there are no fines or delays" name="A loan can be renewed only if the member has no unpaid fines and the item is not overdue - Renewal blocked due to unpaid fines" time="0.002">
+<failure/>
+<system-out><![CDATA[
+Given there is a member with status "ACTIVE"................................undefined
+And there is a media item "Vinyl - A Love Supreme" with status "RENTED".....skipped
+And an existing loan for this item with due date "2025-01-10"...............skipped
+Given the member has unpaid fines...........................................skipped
+And today is "2025-01-09"...................................................skipped
+When the admin requests the renewal.........................................skipped
+Then the system should block the renewal....................................skipped
+And an error "Member has unpaid fines" should be shown......................skipped
+]]></system-out>
+</testcase>
+<testcase classname="Renewal only when there are no fines or delays" name="A loan can be renewed only if the member has no unpaid fines and the item is not overdue - Renewal blocked because the loan is overdue" time="0.001">
+<failure/>
+<system-out><![CDATA[
+Given there is a member with status "ACTIVE"................................undefined
+And there is a media item "Vinyl - A Love Supreme" with status "RENTED".....skipped
+And an existing loan for this item with due date "2025-01-10"...............skipped
+Given the member has no unpaid fines........................................skipped
+And today is "2025-01-12"...................................................skipped
+When the admin requests the renewal.........................................skipped
+Then the system should block the renewal....................................skipped
+And an error "Loan is overdue" should be shown..............................skipped
+]]></system-out>
+</testcase>
+</testsuite>

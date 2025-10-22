@@ -1,8 +1,9 @@
 package br.com.recordstore.socios;
+import br.com.recordstore.emprestimos.Emprestimo; 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
-import lombok.*;
 import java.util.*;
+import lombok.*;
 
 @Entity @Table(name="socios", uniqueConstraints=@UniqueConstraint(name="uk_socio_email", columnNames="email"))
 @Data @NoArgsConstructor @AllArgsConstructor @Builder

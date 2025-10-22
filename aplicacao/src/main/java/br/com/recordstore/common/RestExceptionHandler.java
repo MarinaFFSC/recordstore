@@ -1,19 +1,17 @@
 package br.com.recordstore.common;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.http.*;
-import org.springframework.web.context.request.WebRequest;
-import java.time.Instant;
 import java.util.Map;
+
+
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 @RestControllerAdvice
 public class RestExceptionHandler {
-  @ExceptionHandler(BusinessException.class)
-  public ResponseEntity<Map<String,Object>> handleBusiness(BusinessException ex, WebRequest req){
-    return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY)
-      .body(Map.of("timestamp", Instant.now().toString(), "error", ex.getMessage()));
-  }
-  @ExceptionHandler(IllegalArgumentException.class)
-  public ResponseEntity<Map<String,Object>> handleIllegal(IllegalArgumentException ex, WebRequest req){
-    return ResponseEntity.badRequest().body(Map.of("timestamp", Instant.now().toString(), "error", ex.getMessage()));
-  }
+
+    @ExceptionHandler(BusinessException.class)
+    public ResponseEntity<Map<String, String>> handleBusiness(BusinessException ex) {
+        Map<String, String> body = Map.of("message", ex.getMessage());
+        return ResponseEntity.badRequest().body(body);
+    }
 }
