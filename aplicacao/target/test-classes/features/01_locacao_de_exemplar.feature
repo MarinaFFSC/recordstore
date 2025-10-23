@@ -1,3 +1,4 @@
+# 1) LOCAÇÃO DE EXEMPLAR
 # language: pt
 Funcionalidade: LOCAÇÃO DE EXEMPLAR
   Como administrador
@@ -6,14 +7,14 @@ Funcionalidade: LOCAÇÃO DE EXEMPLAR
 
   Cenário: Exemplar disponível permite locação
   Dado existe um exemplar "DVD Matrix" com status "DISPONIVEL"
-  E existe um sócio ativo logado no sistema
-  Quando o administrador solicita o aluguel do exemplar
-  Então o sistema deve permitir a locação
-  E registrar o empréstimo como "ATIVO" 
+  E existe um sócio ativo autenticado no sistema
+  Quando o administrador requisita o aluguel do exemplar
+  Então o sistema deve autorizar a locação
+  E o empréstimo deve ser registrado como "ATIVO"
 
   Cenário: Exemplar já emprestado recusa nova locação
   Dado há um empréstimo ativo do exemplar "DVD Matrix"
-  E existe um sócio ativo logado no sistema
-  Quando o administrador solicita a locação
-  Então o sistema deve recusar a locação
-  E a locação não deve ser criada
+  E existe um sócio ativo autenticado no sistema
+  Quando o administrador tenta efetuar a locação desse exemplar
+  Então a operação de locação deve ser recusada
+  E nenhuma nova locação deve ser criada

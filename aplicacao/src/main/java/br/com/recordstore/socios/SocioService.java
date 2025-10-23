@@ -1,4 +1,5 @@
 package br.com.recordstore.socios;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import br.com.recordstore.common.BusinessException;
@@ -6,16 +7,23 @@ import br.com.recordstore.emprestimos.EmprestimoRepository;
 
 @Service
 public class SocioService {
+
   private final SocioRepository repo;
   private final EmprestimoRepository empRepo;
+
   public SocioService(SocioRepository repo, EmprestimoRepository empRepo){
-    this.repo = repo; this.empRepo = empRepo;
+    this.repo = repo;
+    this.empRepo = empRepo;
   }
 
   @Transactional
   public Socio cadastrar(String nome, String email){
     repo.findByEmail(email).ifPresent(s -> { throw new BusinessException("Já existe sócio com este e-mail"); });
-    Socio socio = Socio.builder().nome(nome).email(email).status(StatusSocio.ATIVO).build();
+    Socio socio = Socio.builder()
+        .nome(nome)
+        .email(email)
+        .status(StatusSocio.ATIVO)
+        .build();
     return repo.save(socio);
   }
 
@@ -26,7 +34,10 @@ public class SocioService {
     return repo.save(s);
   }
 
+  /**
+   * Verifica se o sócio possui multas realmente pendentes (não pagas).
+   */
   public boolean possuiMultasNaoPagas(Long socioId){
-    return empRepo.existsBySocioIdAndMultaIsNotNull(socioId);
+    return empRepo.existsBySocioIdAndMultaPagaFalse(socioId);
   }
 }

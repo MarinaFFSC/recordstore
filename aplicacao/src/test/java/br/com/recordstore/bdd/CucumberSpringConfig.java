@@ -15,9 +15,6 @@ import static io.cucumber.junit.platform.engine.Constants.PLUGIN_PROPERTY_NAME;
 @SelectClasspathResource("features")
 @ConfigurationParameter(key = GLUE_PROPERTY_NAME, value = "br.com.recordstore.bdd")
 @ConfigurationParameter(key = PLUGIN_PROPERTY_NAME, value = "pretty, summary")
-
-// ESSAS DUAS SÃO AS MAIS IMPORTANTES
 @CucumberContextConfiguration
 @SpringBootTest
-public class CucumberSpringConfig {
-}
+public class CucumberSpringConfig {}
