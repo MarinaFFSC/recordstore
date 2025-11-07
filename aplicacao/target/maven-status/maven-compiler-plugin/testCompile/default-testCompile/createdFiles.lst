@@ -1,6 +1,0 @@
-br\com\recordstore\bdd\RunCucumberTest.class
-br\com\recordstore\bdd\CucumberSpringConfig.class
-br\com\recordstore\bdd\steps\StepsRecordStore$Midia.class
-br\com\recordstore\bdd\steps\StepsRecordStore$Socio.class
-br\com\recordstore\bdd\steps\StepsRecordStore$Emprestimo.class
-br\com\recordstore\bdd\steps\StepsRecordStore.class
