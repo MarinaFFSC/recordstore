@@ -1,0 +1,9 @@
+package recordstore.aplicacao.analise;
+
+import recordstore.dominio.analise.emprestimo.EmprestimoRegistro;
+import recordstore.dominio.acervo.exemplar.Emprestimo;
+import recordstore.dominio.acervo.exemplar.ExemplarId;
+
+public interface EmprestimoRegistroRepositorioAplicacao {
+	EmprestimoRegistro buscar(ExemplarId exemplar, Emprestimo emprestimo);
+}

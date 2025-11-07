@@ -1,0 +1,1 @@
+package recordstore.aplicacao.administracao.socio;
