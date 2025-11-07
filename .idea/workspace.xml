@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="4638a971-ffee-4688-b685-538d2b0a4f11" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/apresentacao-frontend/src/main/angular/src/app/midia-pesquisa/midia-pesquisa-resolver-ts" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/apresentacao-frontend/src/main/angular/src/app/midia-pesquisa/midia-pesquisa.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/apresentacao-frontend/src/main/angular/src/app/midia-pesquisa/midia-pesquisa.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/apresentacao-frontend/src/main/angular/src/app/midia-pesquisa/midia-pesquisa.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apresentacao-frontend/src/main/angular/.editorconfig" beforeDir="false" afterPath="$PROJECT_DIR$/apresentacao-frontend/src/main/angular/.editorconfig" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apresentacao-frontend/src/main/angular/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/apresentacao-frontend/src/main/angular/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apresentacao-frontend/src/main/angular/.vscode/extensions.json" beforeDir="false" afterPath="$PROJECT_DIR$/apresentacao-frontend/src/main/angular/.vscode/extensions.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apresentacao-frontend/src/main/angular/.vscode/launch.json" beforeDir="false" afterPath="$PROJECT_DIR$/apresentacao-frontend/src/main/angular/.vscode/launch.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apresentacao-frontend/src/main/angular/.vscode/tasks.json" beforeDir="false" afterPath="$PROJECT_DIR$/apresentacao-frontend/src/main/angular/.vscode/tasks.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apresentacao-frontend/src/main/angular/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/apresentacao-frontend/src/main/angular/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apresentacao-frontend/src/main/angular/angular.json" beforeDir="false" afterPath="$PROJECT_DIR$/apresentacao-frontend/src/main/angular/angular.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apresentacao-frontend/src/main/angular/package-lock.json" beforeDir="false" afterPath="$PROJECT_DIR$/apresentacao-frontend/src/main/angular/package-lock.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apresentacao-frontend/src/main/angular/src/app/app.config.ts" beforeDir="false" afterPath="$PROJECT_DIR$/apresentacao-frontend/src/main/angular/src/app/app.config.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apresentacao-frontend/src/main/angular/src/app/app.html" beforeDir="false" afterPath="$PROJECT_DIR$/apresentacao-frontend/src/main/angular/src/app/app.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apresentacao-frontend/src/main/angular/src/app/app.routes.ts" beforeDir="false" afterPath="$PROJECT_DIR$/apresentacao-frontend/src/main/angular/src/app/app.routes.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apresentacao-frontend/src/main/angular/src/app/app.ts" beforeDir="false" afterPath="$PROJECT_DIR$/apresentacao-frontend/src/main/angular/src/app/app.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apresentacao-frontend/src/main/angular/src/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/apresentacao-frontend/src/main/angular/src/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apresentacao-frontend/src/main/angular/src/main.ts" beforeDir="false" afterPath="$PROJECT_DIR$/apresentacao-frontend/src/main/angular/src/main.ts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apresentacao-frontend/src/main/angular/src/proxy.conf.json" beforeDir="false" afterPath="$PROJECT_DIR$/apresentacao-frontend/src/main/angular/src/proxy.conf.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/apresentacao-frontend/src/main/angular/src/styles.css" beforeDir="false" afterPath="$PROJECT_DIR$/apresentacao-frontend/src/main/angular/src/styles.css" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="GitHubPullRequestSearchHistory">{
+  &quot;lastFilter&quot;: {
+    &quot;state&quot;: &quot;OPEN&quot;,
+    &quot;assignee&quot;: &quot;MarinaFFSC&quot;
+  }
+}</component>
+  <component name="GithubPullRequestsUISettings">{
+  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;url&quot;: &quot;https://github.com/MarinaFFSC/recordstore.git&quot;,
+    &quot;accountId&quot;: &quot;896f3c5d-3f8b-4045-b52c-57a517e51500&quot;
+  }
+}</component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 5
+}</component>
+  <component name="ProjectId" id="34R1JO9K4wxafwmnpeb3yfLrzUz" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "ModuleVcsDetector.initialDetectionPerformed": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "git-widget-placeholder": "apresentacao-frontend",
+    "kotlin-language-version-configured": "true"
+  }
+}]]></component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\Not\IdeaProjects\recordstore1\aplicacao\src\test\resources\features" />
+      <recent name="C:\Users\Not\IdeaProjects\recordstore1\aplicacao\src\test\java\br\com\recordstore\bdd\steps" />
+    </key>
+  </component>
+  <component name="RunManager">
+    <configuration default="true" type="JetRunConfigurationType">
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration default="true" type="KotlinStandaloneScriptRunConfigurationType">
+      <option name="filePath" />
+      <method v="2" />
+    </configuration>
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="4638a971-ffee-4688-b685-538d2b0a4f11" name="Changes" comment="" />
+      <created>1761161499092</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1761161499092</updated>
+    </task>
+    <servers />
+  </component>
+</project>
