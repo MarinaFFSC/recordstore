@@ -18,8 +18,8 @@ import recordstore.apresentacao.BackendMapeador;
 import recordstore.apresentacao.acervo.midia.MidiaFormulario.MidiaDto;
 import recordstore.dominio.acervo.exemplar.EmprestimoServico;
 import recordstore.dominio.acervo.midia.CodigoBarra;
-import recordstore.dominio.acervo.midia.Midai;
-import recordstore.dominio.acervo.midai.MidiaServico;
+import recordstore.dominio.acervo.midia.Midia;
+import recordstore.dominio.acervo.midia.MidiaServico;
 import recordstore.dominio.administracao.socio.SocioId;
 
 @RestController
@@ -27,8 +27,8 @@ import recordstore.dominio.administracao.socio.SocioId;
 class MidiaControlador {
 	private @Autowired ArtistaServicoAplicacao artistaServicoConsulta;
 	private @Autowired EmprestimoServico emprestimoServico;
-	private @Autowired MidiaServico midaiServico;
-	private @Autowired MidiaServicoAplicacao midaiServicoConsulta;
+	private @Autowired MidiaServico midiaServico;
+	private @Autowired MidiaServicoAplicacao midiaServicoConsulta;
 
 	private @Autowired BackendMapeador mapeador;
 
@@ -45,7 +45,7 @@ class MidiaControlador {
 	MidiaFormulario criacao() {
 		var midia= new MidiaDto();
 		var artistas = artistaServicoConsulta.pesquisarResumos();
-		return new MidaiFormulario(midai, artistas);
+		return new MidiaFormulario(midia, artistas);
 	}
 
 	@RequestMapping(method = POST, path = "salvar")

@@ -8,7 +8,7 @@ public class MidiaFormulario {
 	public MidiaDto midia;
 	public List<ArtistaResumo> artista;
 
-	public MidiaFormulario(MidiaDto midai, List<ArtistaResumo> artistas) {
+	public MidiaFormulario(MidiaDto midia, List<ArtistaResumo> artistas) {
 		this.midia = midia;
 		this.artistas = artistas;
 	}

@@ -59,7 +59,7 @@ public class VaadinAplicacao {
 	}
 
 	@Bean
-	public MidaiServicoAplicacao midiaServicoAplicacao(MidiaRepositorioAplicacao repositorio) {
+	public MidiaServicoAplicacao midiaServicoAplicacao(MidiaRepositorioAplicacao repositorio) {
 		return new MidiaServicoAplicacao(repositorio);
 	}
 

@@ -57,7 +57,7 @@ public class MidiaFormulario extends VerticalLayout {
 		nonNull(midia);
 
 		midia.setTitulo(valor(tituloCampo));
-		midai.setSubTitulo(valor(subtituloCampo));
+		midia.setSubTitulo(valor(subtituloCampo));
 	}
 
 	private String valor(TextField campo) {
