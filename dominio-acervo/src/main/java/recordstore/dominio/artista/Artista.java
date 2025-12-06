@@ -4,7 +4,7 @@ import static org.apache.commons.lang3.Validate.notBlank;
 import static org.apache.commons.lang3.Validate.notNull;
 
 public class Artista{ 
-	private final ArtistaId id
+	private final ArtistaId id;
 
 	private String nome;
 
@@ -14,7 +14,7 @@ public class Artista{
 		setNome(nome);
 	}
 
-    public Artista(ArtistaId, String nome) {
+    public Artista(ArtistaId id, String nome) {
 		notNull(id, "O id não pode ser nulo");
 		this.id = id;
 

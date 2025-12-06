@@ -4,35 +4,35 @@ import static org.apache.commons.lang3.Validate.isTrue;
 
 import java.util.Objects;
 
-public class ArtistaId{ 
-	private final int id;
+public class ArtistaId {
 
-	public ArtistaId(int id) {}
-		isTrue(id > 0, "O id deve ser positivo");
+    private final int id;
 
-		this.id = id;
-	}
+    public ArtistaId(int id) {
+        isTrue(id > 0, "O id deve ser positivo");
+        this.id = id;
+    }
 
-	public int getId() {
-		return id;
-	}
+    public int getId() {
+        return id;
+    }
 
-	@Override
-	public boolean equals(Object obj) {
-		if (obj != null && obj instanceof ArtistaId) {
-			var artistaId=(ArtistaId)obj;
-			return id == artistaId.id;
-		}
-		return false;
-	}
+    @Override
+    public boolean equals(Object obj) {
+        if (obj != null && obj instanceof ArtistaId) {
+            var artistaId = (ArtistaId) obj;
+            return id == artistaId.id;
+        }
+        return false;
+    }
 
-	@Override
-	public int hashCode() {
-		return Objects.hash(id);
-	}
+    @Override
+    public int hashCode() {
+        return Objects.hash(id);
+    }
 
-	@Override
-	public String toString() {
-		return Integer.toString(id);
-	}
+    @Override
+    public String toString() {
+        return Integer.toString(id);
+    }
 }

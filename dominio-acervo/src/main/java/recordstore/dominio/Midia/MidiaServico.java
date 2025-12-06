@@ -15,7 +15,7 @@ public class MidiaServico {
 	public void salvar(Midia midia) {
 		notNull(midia, "A midia não pode ser nulo");
 
-		muidiaRepositorio.salvar(midia);
+		midiaRepositorio.salvar(midia);
 	}
 
 	public Midia obter(CodigoBarra id) {

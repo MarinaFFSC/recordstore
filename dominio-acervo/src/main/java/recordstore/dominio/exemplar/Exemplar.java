@@ -4,13 +4,13 @@ import static org.apache.commons.lang3.Validate.notNull;
 
 import java.time.LocalDate;
 
-import recordstore.dominio.acervo.midia.CodigoBarr;
+import recordstore.dominio.acervo.midia.CodigoBarra;
 import recordstore.dominio.administracao.socio.SocioId;
 
 public class Exemplar {
 	private final ExemplarId id;
 
-	private CodigtoBarra midia;
+	private CodigoBarra midia;
 	private Emprestimo emprestimo;
 
 	public Exemplar(CodigoBarra midia, Emprestimo emprestimo) {
@@ -126,6 +126,3 @@ public class Exemplar {
 			super(exemplar);
 		}
 	}
-}public class Exemplar {
-    
-}

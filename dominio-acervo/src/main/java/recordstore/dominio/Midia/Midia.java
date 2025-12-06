@@ -11,7 +11,7 @@ import java.util.List;
 
 import recordstore.dominio.acervo.artista.ArtistaId;
 
-public class Artista {
+public class Midia {
 	private final CodigoBarra id;
 
 	private String titulo;

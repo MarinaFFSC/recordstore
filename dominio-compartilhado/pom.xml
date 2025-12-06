@@ -5,13 +5,13 @@
 	<modelVersion>4.0.0</modelVersion>
 	
 	<parent>
-		<groupId>recodstore</groupId>
-		<artifactId>recodstore-pai</artifactId>
+		<groupId>recordstore</groupId>
+		<artifactId>recordstore-pai</artifactId>
 		<version>0.0.1-SNAPSHOT</version>
 	    <relativePath>../pai</relativePath>
 	</parent>
 
-	<artifactId>recodstore-dominio-compartilhado</artifactId>
+	<artifactId>recordstore-dominio-compartilhado</artifactId>
 	
 	<dependencyManagement>
 		<dependencies>

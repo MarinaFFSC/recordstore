@@ -12,8 +12,7 @@
 	</parent>
 
 	<groupId>recordstore</groupId>
-	<groupId>recordstore</groupId>
-	<artifactId>-pai</artifactId>
+	<artifactId>recordstore-pai</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	
 	<packaging>pom</packaging>
