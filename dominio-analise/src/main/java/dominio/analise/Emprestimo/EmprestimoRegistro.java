@@ -1,5 +1,4 @@
-
-package dominio.analise.emprestimo;
+package recordstore.dominio.analise.emprestimo;
 
 import static org.apache.commons.lang3.Validate.notNull;
 

@@ -3,41 +3,39 @@ package recordstore.dominio.acervo.artista;
 import static org.apache.commons.lang3.Validate.notBlank;
 import static org.apache.commons.lang3.Validate.notNull;
 
-public class Artista{ 
-	private final ArtistaId id
+public class Artista {
 
-	private String nome;
+    private final ArtistaId id;
 
-	public Artista(String nome){ 
-		id = null;
+    private String nome;
 
-		setNome(nome);
-	}
+    public Artista(String nome) {
+        this.id = null;
+        setNome(nome);
+    }
 
-    public Artista(ArtistaId, String nome) {
-		notNull(id, "O id não pode ser nulo");
-		this.id = id;
+    public Artista(ArtistaId id, String nome) {
+        notNull(id, "O id não pode ser nulo");
+        this.id = id;
+        setNome(nome);
+    }
 
-		setNome(nome);
-	}
+    public ArtistaId getId() {
+        return id;
+    }
 
-    public ArtistaId getId(){ 
-		return id;
-	}
+    public void setNome(String nome) {
+        notNull(nome, "O nome não pode ser nulo");
+        notBlank(nome, "O nome não pode estar em branco");
+        this.nome = nome;
+    }
 
-	public void setNome(String nome) {
-		notNull(nome, "O nome não pode ser nulo");
-		notBlank(nome, "O nome não pode estar em branco");
+    public String getNome() {
+        return nome;
+    }
 
-		this.nome = nome;
-	}
-
-	public String getNome() {
-		return nome;
-	}
-
-	@Override
-	public String toString() {
-		return nome;
-	}
+    @Override
+    public String toString() {
+        return nome;
+    }
 }

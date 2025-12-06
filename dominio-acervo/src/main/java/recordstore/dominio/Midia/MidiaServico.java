@@ -1,4 +1,3 @@
-
 package recordstore.dominio.acervo.midia;
 
 import static org.apache.commons.lang3.Validate.notNull;
@@ -15,7 +14,7 @@ public class MidiaServico {
 	public void salvar(Midia midia) {
 		notNull(midia, "A midia não pode ser nulo");
 
-		muidiaRepositorio.salvar(midia);
+		midiaRepositorio.salvar(midia);
 	}
 
 	public Midia obter(CodigoBarra id) {

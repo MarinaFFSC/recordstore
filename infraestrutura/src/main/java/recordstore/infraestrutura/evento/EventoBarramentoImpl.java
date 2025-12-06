@@ -1,0 +1,40 @@
+package recordstore.infraestrutura.evento;
+
+import static org.apache.commons.lang3.Validate.notNull;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.context.ApplicationListener;
+import org.springframework.context.PayloadApplicationEvent;
+import org.springframework.context.event.ApplicationEventMulticaster;
+import org.springframework.stereotype.Component;
+
+import recordstore.dominio.evento.EventoBarramento;
+import recordstore.dominio.evento.EventoObservador;
+
+@Component
+public class EventoBarramentoImpl implements EventoBarramento {
+
+    @Autowired
+    private ApplicationEventPublisher publicador;
+
+    @Autowired
+    private ApplicationEventMulticaster multicaster;
+
+    @Override
+    public <E> void adicionar(EventoObservador<E> observador) {
+        notNull(observador, "O observador não pode ser nulo");
+
+        multicaster.addApplicationListener(new ApplicationListener<PayloadApplicationEvent<E>>() {
+            @Override
+            public void onApplicationEvent(PayloadApplicationEvent<E> evento) {
+                observador.observarEvento(evento.getPayload());
+            }
+        });
+    }
+
+    @Override
+    public <E> void postar(E evento) {
+        publicador.publishEvent(evento);
+    }
+}

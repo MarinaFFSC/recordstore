@@ -1,5 +1,4 @@
-
-package recordstore.dominio.acervo.artista;
+package recordstore.dominio.acervo.midia;
 
 import static org.apache.commons.lang3.Validate.notBlank;
 import static org.apache.commons.lang3.Validate.notEmpty;
@@ -11,72 +10,53 @@ import java.util.List;
 
 import recordstore.dominio.acervo.artista.ArtistaId;
 
-public class Artista {
-	private final CodigoBarra id;
+public class Midia {
 
-	private String titulo;
-	private String subTitulo;
+    private final CodigoBarra id;
 
-	private List<ArtistaId> atistas = new ArrayList<>();
+    private String titulo;
+    private String subtitulo;
+    private String descricao;
 
-	public Midia(CodigoBarra id, String titulo, String subTitulo, List<ArtistaId> artistas) {
-		notNull(id, "O id não pode ser nulo");
-		this.id = id;
+    private final List<ArtistaId> artistas = new ArrayList<>();
 
-		setTitulo(titulo);
-		setSubTitulo(subTitulo);
-		setArtistas(artistas);
-	}
+    public Midia(CodigoBarra id, String titulo, String subtitulo, String descricao,
+                 Collection<ArtistaId> artistas) {
 
-	public CodigoBarra getId() {
-		return id;
-	}
+        notNull(id, "O código de barras não pode ser nulo");
+        notBlank(titulo, "O título não pode estar em branco");
+        notNull(artistas, "A lista de artistas não pode ser nula");
+        notEmpty(artistas, "Deve haver pelo menos um artista");
 
-	public void setTitulo(String titulo) {
-		notNull(titulo, "O título não pode ser nulo");
-		notBlank(titulo, "O título não pode estar em branco");
+        this.id = id;
+        this.titulo = titulo;
+        this.subtitulo = subtitulo;
+        this.descricao = descricao;
+        this.artistas.addAll(artistas);
+    }
 
-		this.titulo = titulo;
-	}
+    public CodigoBarra getId() {
+        return id;
+    }
 
-	public String getTitulo() {
-		return titulo;
-	}
+    public String getTitulo() {
+        return titulo;
+    }
 
-	public void setSubTitulo(String subTitulo) {
-		if (subTitulo != null) {
-			notBlank(titulo, "O subtítulo não pode estar em branco");
-		}
-		this.subTitulo = subTitulo;
-	}
+    public String getSubtitulo() {
+        return subtitulo;
+    }
 
-	public String getSubTitulo() {
-		return subTitulo;
-	}
+    public String getDescricao() {
+        return descricao;
+    }
 
-	private void setArtistas(Collection<ArtistaId> artistas) {
-		notNull(artistas, "O vetor de artistas não pode ser nulo");
-		notEmpty(artistas, "A midia deve ter pelo menos um artista");
+    public Collection<ArtistaId> getArtistas() {
+        return new ArrayList<>(artistas);
+    }
 
-		for (var artista : artistas) {
-			adicionarArtista(artista);
-		}
-	}
-
-	public Collection<ArtistaId> getArtistas() {
-		var copia = new ArrayList<ArtistaId>();
-		copia.addAll(artistas);
-		return copia;
-	}
-
-	public void adicionarArtistas(ArtistaId artista) {
-		notNull(artistas, "O artista no pode ser nulo");
-
-		artistas.add(artista);
-	}
-
-	@Override
-	public String toString() {
-		return titulo;
-	}
+    @Override
+    public String toString() {
+        return titulo;
+    }
 }

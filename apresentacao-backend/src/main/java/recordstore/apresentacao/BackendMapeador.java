@@ -17,10 +17,10 @@ import recordstore.dominio.administracao.socio.SocioId;
 
 @Component
 public class BackendMapeador extends ModelMapper {
-	private CepFabrica cepFabrica;
+	private CodigoBarraabrica codigoBarraFabrica;
 
 	BackendMapeador() {
-		cepFabrica = new CepFabrica();
+		codigoBarraFabrica = new CodigoBarraFabrica();
 
 		addConverter(new AbstractConverter<MidiaDto, Midia>() {
 			@Override

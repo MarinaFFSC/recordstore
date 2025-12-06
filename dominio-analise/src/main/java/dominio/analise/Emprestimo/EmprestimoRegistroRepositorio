@@ -1,5 +1,6 @@
-package dominio.analise.emprestimo;
+package recordstore.dominio.analise.emprestimo;
 
 public interface EmprestimoRegistroRepositorio {
-	void salvar(EmprestimoRegistro emprestimoRegistro);
+
+    void salvar(EmprestimoRegistro emprestimoRegistro);
 }

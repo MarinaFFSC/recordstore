@@ -1,0 +1,1 @@
+package recordstore.infraestrutura.persistencia.jpa;

@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 import recordstore.aplicacao.acervo.artista.ArtistaServicoAplicacao;
 import recordstore.aplicacao.acervo.midia.MidiaServicoAplicacao;
 import recordstore.apresentacao.BackendMapeador;
+import recordstore.apresentacao.acervo.midia.MidiaFormulario;
 import recordstore.apresentacao.acervo.midia.MidiaFormulario.MidiaDto;
 import recordstore.dominio.acervo.exemplar.EmprestimoServico;
 import recordstore.dominio.acervo.midia.CodigoBarra;
@@ -25,20 +26,19 @@ import recordstore.dominio.administracao.socio.SocioId;
 @RestController
 @RequestMapping("backend/midia")
 class MidiaControlador {
-	private @Autowired ArtistaServicoAplicacao artistaServicoConsulta;
-	private @Autowired EmprestimoServico emprestimoServico;
-	private @Autowired MidiaServico midiaServico;
-	private @Autowired MidiaServicoAplicacao midiaServicoConsulta;
 
-	private @Autowired BackendMapeador mapeador;
+    private @Autowired ArtistaServicoAplicacao artistaServicoConsulta;
+    private @Autowired EmprestimoServico emprestimoServico;
+    private @Autowired MidiaServico midiaServico;
+    private @Autowired MidiaServicoAplicacao midiaServicoConsulta;
 
-	@RequestMapping(method = GET, path = "pesquisa")
-	List<? extends Object> pesquisar(@RequestParam(required = false, defaultValue = "false") boolean expandir) {
-		if (expandir) {
-			return midiaServicoConsulta.pesquisarResumosExpandidos();
-		} else {
-			return midiaServicoConsulta.pesquisarResumos();
-		}
+    private @Autowired BackendMapeador mapeador;
+
+	@RequestMapping(method = GET, path = "criacao")
+	MidiaFormulario criacao() {
+    	var midia = new MidiaDto();
+    	var artistas = artistaServicoConsulta.pesquisarResumos();
+    	return new MidiaFormulario(midia, artistas);
 	}
 
 	@RequestMapping(method = GET, path = "criacao")
