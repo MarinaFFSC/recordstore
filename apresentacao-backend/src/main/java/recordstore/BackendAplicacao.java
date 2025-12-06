@@ -17,6 +17,7 @@ import recordstore.aplicacao.administracao.socio.SocioRepositorioAplicacao;
 import recordstore.aplicacao.administracao.socio.SocioServicoAplicacao;
 import recordstore.aplicacao.analise.EmprestimoRegistroRepositorioAplicacao;
 import recordstore.aplicacao.analise.EmprestimoRegistroServicoAplicacao;
+
 import recordstore.dominio.acervo.artista.ArtistaRepositorio;
 import recordstore.dominio.acervo.artista.ArtistaServico;
 import recordstore.dominio.acervo.exemplar.ExemplarRepositorio;
@@ -28,8 +29,6 @@ import recordstore.dominio.administracao.socio.SocioRepositorio;
 import recordstore.dominio.administracao.socio.SocioServico;
 import recordstore.dominio.analise.emprestimo.EmprestimoRegistroRepositorio;
 import recordstore.dominio.evento.EventoBarramento;
-import recordstore.infraestrutura.evento.EventoBarramentoImpl;
-import recordstore.infraestrutura.persistencia.jpa.midia.MidiaRepositorio;
 
 @SpringBootApplication
 public class BackendAplicacao {
