@@ -1,0 +1,28 @@
+
+services:
+  -postgres:
+     container_name: postgres  
+     image: postgres:18
+     environment:
+       POSTGRES_DB: recordstore
+       POSTGRES_USER: recordstore       
+       POSTGRES_PASSWORD: recordstore
+     volumes:
+       - postgres:/var/lib/postgresql/18/docker
+     ports:
+       - 5432:5432
+
+  -recordstore:
+     image: recordstore-apresentacao-frontend:0.0.1-SNAPSHOT
+     environment:
+       SPRING_DATASOURCE_DRIVER_CLASS_NAME: org.postgresql.Driver
+       SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/recordstore
+       SPRING_DATASOURCE_USERNAME: recordstore
+       SPRING__DATASOURCE_PASSWORD: recordstore
+     volumes:
+       - postgres:/var/lib/postgresql/18/docker
+     ports:
+       - 8080:8080
+
+volumes:
+  postgres:

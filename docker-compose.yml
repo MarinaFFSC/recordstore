@@ -1,0 +1,16 @@
+
+services:
+  -postgres:
+     container_name: postgres
+     image: postgres:18
+     environment:
+       POSTGRES_DB: recordstore
+       POSTGRES_USER: recordstore     
+       POSTGRES_PASSWORD: recordstore
+     volumes:
+       - postgres:/var/lib/postgresql/18/docker
+     ports:
+       - 5432:5432
+
+volumes:
+  postgres:

@@ -1,13 +1,13 @@
-package recordstore.dominio.acervo.exemplar;
+package recordstore.dominio.administracao.socio;
 
 import static org.apache.commons.lang3.Validate.isTrue;
 
 import java.util.Objects;
 
-public class ExemplarId {
+public class SocioId {
 	private final int id;
 
-	public ExemplarId(int id) {
+	public SocioId(int id) {
 		isTrue(id > 0, "O id deve ser positivo");
 
 		this.id = id;
@@ -19,9 +19,9 @@ public class ExemplarId {
 
 	@Override
 	public boolean equals(Object obj) {
-		if (obj != null && obj instanceof ExemplarId) {
-			var exemplarId = (ExemplarId) obj;
-			return id == exemplarId.id;
+		if (obj != null && obj instanceof SocioId) {
+			var socioId = (SocioId) obj;
+			return id == socioId.id;
 		}
 		return false;
 	}

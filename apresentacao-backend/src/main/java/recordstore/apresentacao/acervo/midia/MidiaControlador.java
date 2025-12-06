@@ -1,4 +1,4 @@
-package dev.sauloaraujo.sgb.apresentacao.acervo.midia;
+package recordstore.apresentacao.acervo.midia;
 
 import static org.springframework.web.bind.annotation.RequestMethod.GET;
 import static org.springframework.web.bind.annotation.RequestMethod.POST;
@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import recordstore.aplicacao.acervo.autor.AutorServicoAplicacao;
+import recordstore.aplicacao.acervo.artista.ArtistaServicoAplicacao;
 import recordstore.aplicacao.acervo.midia.MidiaServicoAplicacao;
 import recordstore.apresentacao.BackendMapeador;
 import recordstore.apresentacao.acervo.midia.MidiaFormulario.MidiaDto;
@@ -25,7 +25,7 @@ import recordstore.dominio.administracao.socio.SocioId;
 @RestController
 @RequestMapping("backend/midia")
 class MidiaControlador {
-	private @Autowired AutorServicoAplicacao autorServicoConsulta;
+	private @Autowired ArtistaServicoAplicacao artistaServicoConsulta;
 	private @Autowired EmprestimoServico emprestimoServico;
 	private @Autowired MidiaServico midaiServico;
 	private @Autowired MidiaServicoAplicacao midaiServicoConsulta;
@@ -44,8 +44,8 @@ class MidiaControlador {
 	@RequestMapping(method = GET, path = "criacao")
 	MidiaFormulario criacao() {
 		var midia= new MidiaDto();
-		var autores = autorServicoConsulta.pesquisarResumos();
-		return new MidaiFormulario(midai, autores);
+		var artistas = artistaServicoConsulta.pesquisarResumos();
+		return new MidaiFormulario(midai, artistas);
 	}
 
 	@RequestMapping(method = POST, path = "salvar")
@@ -57,7 +57,7 @@ class MidiaControlador {
 
 	@RequestMapping(method = POST, path = "{id}/realizar-emprestimo")
 	void realizarEmprestimo(@PathVariable("id") String id, @RequestBody int socio) {
-		var midiaId = mapeador.map(id, Isbn.class);
+		var midiaId = mapeador.map(id, CodigoBarra.class);
 		var socioId = mapeador.map(socio, SocioId.class);
 		emprestimoServico.realizarEmprestimo(midiaId, socioId);
 	}

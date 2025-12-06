@@ -6,7 +6,7 @@
 	
 	<parent>
 		<groupId>recordstore</groupId>
-		<artifactId>sgb-pai</artifactId>
+		<artifactId>recordstore-pai</artifactId>
 		<version>0.0.1-SNAPSHOT</version>
 	    <relativePath>../pai</relativePath>
 	</parent>

@@ -1,11 +1,11 @@
 package recordstore.aplicacao.acervo.exemplar;
 
-import recordstore.aplicacao.acervo.livro.LivroResumo;
+import recordstore.aplicacao.acervo.midia.MidiaResumo;
 
 public interface ExemplarResumoExpandido extends ExemplarResumo {
 	String getId();
 
-	LivroResumo getLivro();
+	MidiaResumo getMidia();
 
 	EmprestimoResumo getEmprestimo();
 }

@@ -1,9 +1,9 @@
-package recordstore.aplicacao.acervo.livro;
+package recordstore.aplicacao.acervo.midia;
 
 import java.util.List;
 
 public interface MidiaRepositorioAplicacao {
-	List<LivroResumo> pesquisarResumos();
+	List<MidisResumo> pesquisarResumos();
 
-	List<LivroResumoExpandido> pesquisarResumosExpandidos();
+	List<MidiaResumoExpandido> pesquisarResumosExpandidos();
 }

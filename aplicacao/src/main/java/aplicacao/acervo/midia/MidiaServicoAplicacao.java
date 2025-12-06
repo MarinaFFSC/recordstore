@@ -1,4 +1,4 @@
-package recordstore.aplicacao.acervo.livro;
+package recordstore.aplicacao.acervo.midia;
 
 import static org.apache.commons.lang3.Validate.notNull;
 

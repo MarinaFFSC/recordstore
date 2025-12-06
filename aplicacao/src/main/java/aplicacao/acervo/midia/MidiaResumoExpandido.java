@@ -1,11 +1,11 @@
-package recordstore.aplicacao.acervo.livro;
+package recordstore.aplicacao.acervo.midia;
 
-import recordstore.aplicacao.acervo.autor.AutorResumo;
+import recordstore.aplicacao.acervo.artista.ArtistaResumo;
 
 public interface MidiaResumoExpandido {
-	LivroResumo getLivro();
+	MidiaResumo getMidia();
 
-	AutorResumo getAutor();
+	ArtistaResumo getArtista();
 
 	int getExemplaresDisponiveis();
 
