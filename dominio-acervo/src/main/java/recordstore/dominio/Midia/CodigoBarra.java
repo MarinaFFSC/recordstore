@@ -22,7 +22,7 @@ public abstract class CodigoBarra {
 	public boolean equals(Object obj) {
 		if (obj != null && obj instanceof CodigoBarra) {
 			var codigoBarra = (CodigoBarra) obj;
-			return codigo.equals(codigoBaarra.codigo);
+			return codigo.equals(codigoBarra.codigo);
 		}
 		return false;
 	}

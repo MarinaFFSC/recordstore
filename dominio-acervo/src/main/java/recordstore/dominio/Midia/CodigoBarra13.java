@@ -1,7 +1,6 @@
-
 package recordstore.dominio.acervo.midia;
 
-import org.apache.commons.validator.routines.CodigoBarraValidator;
+import org.apache.commons.validator.routines.CODIGOBARRAValidator;
 
 class CodigoBarra13 extends CodigoBarra {
 	CodigoBarra13(String codigo) {
@@ -10,6 +9,6 @@ class CodigoBarra13 extends CodigoBarra {
 
 	@Override
 	boolean testarCodigo(String codigo) {
-		return CodigoBarraValidator.getInstance().isValidICodigoBarra13(codigo);
+		return CODIGOBARRAValidator.getInstance().isValidCODIGOBARRA13(codigo);
 	}
 }

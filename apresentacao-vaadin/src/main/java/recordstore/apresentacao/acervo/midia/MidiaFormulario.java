@@ -10,18 +10,18 @@ import recordstore.dominio.acervo.midia.Midia;
 public class MidiaFormulario extends VerticalLayout {
 	private static final long serialVersionUID = -4762635896445399303L;
 
-	private TextField CodigoBarraCampo;
+	private TextField codigoBarraCampo;
 	private TextField tituloCampo;
 	private TextField subtituloCampo;
 
 	public MidiaFormulario(boolean edicao) {
 		setPadding(false);
 
-		CodigoBarraCampo = new TextField("Codigo de Barra");
-		CodigoBarraCampo.setWidthFull();
-		CodigoBarraCampo.setRequired(true);
-		CodigoBarraCampo.setReadOnly(edicao);
-		add(CodigoBarraCampo);
+		codigoBarraCampo = new TextField("Codigo de Barra");
+		codigoBarraCampo.setWidthFull();
+		codigoBarraCampo.setRequired(true);
+		codigoBarraCampo.setReadOnly(edicao);
+		add(codigoBarraCampo);
 
 		tituloCampo = new TextField("Título");
 		tituloCampo.setWidthFull();
@@ -36,11 +36,11 @@ public class MidiaFormulario extends VerticalLayout {
 	public void ler(Midia midia) {
 		nonNull(midia);
 
-		var CodigoBarra = midia.getId().toString();
+		var codigoBarra = midia.getId().toString();
 		var titulo = midia.getTitulo();
 		var subtitulo = midia.getSubTitulo();
 
-		setValue(CodigoBarraCampo, CodigoBarra);
+		setValue(codigoBarraCampo, codigoBarra);
 		setValue(tituloCampo, titulo);
 		setValue(subtituloCampo, subtitulo);
 	}

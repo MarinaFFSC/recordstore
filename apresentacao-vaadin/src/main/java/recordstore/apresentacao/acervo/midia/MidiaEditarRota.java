@@ -18,7 +18,7 @@ import com.vaadin.flow.router.HasUrlParameter;
 import com.vaadin.flow.router.Route;
 
 import recordstore.dominio.acervo.midia.CodigoBarra;
-import recordstore.dominio.acervo.midia.CodigoBarra;
+import recordstore.dominio.acervo.midia.CodigoBarraFabrica;
 import recordstore.dominio.acervo.midia.MidiaServico;
 import jakarta.annotation.PostConstruct;
 
@@ -29,7 +29,7 @@ public class MidiaEditarRota extends VerticalLayout implements HasUrlParameter<S
 	private @Autowired MidiaServico servico;
 
 	private MidiaFormulario formulario;
-	private CodigoBarra CodigoBarra;
+	private CodigoBarra codigoBarra;
 
 	@PostConstruct
 	private void configurar() {
@@ -48,15 +48,15 @@ public class MidiaEditarRota extends VerticalLayout implements HasUrlParameter<S
 
 	@Override
 	public void setParameter(BeforeEvent event, String parameter) {
-		var fabrica = new CodigoBarra();
-		CodigoBarra = fabrica.construir(parameter);
+		var fabrica = new CodigoBarraFabrica();
+		codigoBarra = fabrica.construir(parameter);
 
-		var midia = servico.obter(CodigoBarra);
+		var midia = servico.obter(codigoBarra);
 		formulario.ler(midia);
 	}
 
 	private void salvar(ClickEvent<Button> evento) {
-		var midia = servico.obter(CodigoBarra);
+		var midia = servico.obter(codigoBarra);
 		formulario.escrever(midia);
 		servico.salvar(midia);
 

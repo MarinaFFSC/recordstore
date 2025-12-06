@@ -1,4 +1,4 @@
-package recordstore.dominio.acervo.midia;
+package recordstore.dominio.acervo.livro;
 
 import static org.apache.commons.lang3.Validate.notNull;
 

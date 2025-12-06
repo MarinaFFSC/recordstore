@@ -7,10 +7,11 @@ import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
 import org.springframework.stereotype.Component;
 
-import recordstore.apresentacao.acervo.midia.MidiaFormulario.MidiaDto;
-import recordstore.dominio.acervo.artistas.ArtistaId;
+import recordstore.apresentacao.acervo.midia.MidiaFormulario.MidiaoDto;
+import recordstore.dominio.acervo.artista.Artistad;
 import recordstore.dominio.acervo.exemplar.ExemplarId;
 import recordstore.dominio.acervo.midia.CodigoBarra;
+import recordstore.dominio.acervo.midia.CodigoBarraFabrica;
 import recordstore.dominio.acervo.midia.Midia;
 import recordstore.dominio.administracao.socio.SocioId;
 
@@ -35,7 +36,7 @@ public class BackendMapeador extends ModelMapper {
 		addConverter(new AbstractConverter<String, CodigoBarra>() {
 			@Override
 			protected CodigoBarra convert(String source) {
-				return cepFabrica.construir(source);
+				return codigoBarraFabrica.construir(source);
 			}
 		});
 
