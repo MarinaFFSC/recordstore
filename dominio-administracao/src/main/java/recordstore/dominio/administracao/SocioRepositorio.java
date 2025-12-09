@@ -1,4 +1,6 @@
-package recordstore.dominio.administracao.socio;
+package recordstore.dominio.administracao;
+
+import recordstore.dominio.administracao.socio.SocioId;
 
 public interface SocioRepositorio {
 	void salvar(Socio socio);

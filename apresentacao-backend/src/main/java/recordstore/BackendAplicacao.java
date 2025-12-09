@@ -25,8 +25,8 @@ import recordstore.dominio.acervo.exemplar.ExemplarServico;
 import recordstore.dominio.acervo.exemplar.EmprestimoServico;
 import recordstore.dominio.acervo.midia.MidiaRepositorio;
 import recordstore.dominio.acervo.midia.MidiaServico;
-import recordstore.dominio.administracao.socio.SocioRepositorio;
-import recordstore.dominio.administracao.socio.SocioServico;
+import recordstore.dominio.administracao.SocioRepositorio;
+import recordstore.dominio.administracao.SocioServico;
 import recordstore.dominio.analise.emprestimo.EmprestimoRegistroRepositorio;
 import recordstore.dominio.evento.EventoBarramento;
 
@@ -75,11 +75,6 @@ public class BackendAplicacao {
     }
 
     @Bean
-    public SocioServicoAplicacao socioServicoAplicacao(SocioRepositorioAplicacao repositorio) {
-        return new SocioServicoAplicacao(repositorio);
-    }
-
-    @Bean
     public EmprestimoRegistroServicoAplicacao emprestimoRegistroServicoAplicacao(
             EmprestimoRegistroRepositorio repositorio,
             EmprestimoRegistroRepositorioAplicacao repositorioAplicacao,
@@ -90,4 +85,13 @@ public class BackendAplicacao {
     public static void main(String[] args) throws IOException {
         run(BackendAplicacao.class, args);
     }
+    
+    @Bean
+    public SocioServicoAplicacao socioServicoAplicacao(
+            SocioRepositorioAplicacao repoAplicacao,
+            SocioRepositorio repoDominio) {
+        return new SocioServicoAplicacao(repoAplicacao, repoDominio);
+    }
+
+
 }

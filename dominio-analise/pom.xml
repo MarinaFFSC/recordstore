@@ -5,13 +5,13 @@
 	<modelVersion>4.0.0</modelVersion>
 
 	<parent>
-		<groupId>recodstore</groupId>
-		<artifactId>recodstore-pai</artifactId>
+		<groupId>recordstore</groupId>
+		<artifactId>recordstore-pai</artifactId>
 		<version>0.0.1-SNAPSHOT</version>
-	    <relativePath>../pai</relativePath>
+	    <relativePath>../pai/pom.xml</relativePath>
 	</parent>
 
-	<artifactId>recodstore-dominio-analise</artifactId>
+	<artifactId>recordstore-dominio-analise</artifactId>
 
 	<dependencyManagement>
 		<dependencies>
@@ -39,7 +39,13 @@
 
 		<dependency>
 			<groupId>${project.groupId}</groupId>
-			<artifactId>recodstore-dominio-compartilhado</artifactId>
+			<artifactId>recordstore-dominio-compartilhado</artifactId>
+			<version>${project.version}</version>
+		</dependency>
+		
+		<dependency>
+			<groupId>${project.groupId}</groupId>
+			<artifactId>recordstore-dominio-acervo</artifactId>
 			<version>${project.version}</version>
 		</dependency>		
 	</dependencies>

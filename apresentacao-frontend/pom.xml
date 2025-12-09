@@ -6,9 +6,9 @@
 
     <parent>
         <groupId>recordstore</groupId>
-        <artifactId>recordstore-pai</artifactId>
+		<artifactId>recordstore-pai</artifactId>
         <version>0.0.1-SNAPSHOT</version>
-        <relativePath>../pai</relativePath>
+        <relativePath>../pai/pom.xml</relativePath>
     </parent>
 
     <artifactId>recordstore-apresentacao-frontend</artifactId>

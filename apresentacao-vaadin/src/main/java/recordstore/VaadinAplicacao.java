@@ -33,8 +33,8 @@ public class VaadinAplicacao {
 	}
 
 	@Bean
-	public artistaServicoAplicacao artistaServicoAplicacao(ArtistaRepositorioAplicacao repositorio) {
-		 return new artistaServicoAplicacao(repositorio);
+	public ArtistaServicoAplicacao artistaServicoAplicacao(ArtistaRepositorioAplicacao repositorio) {
+		 return new ArtistaServicoAplicacao(repositorio);
 	}
 
 

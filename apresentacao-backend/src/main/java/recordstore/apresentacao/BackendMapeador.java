@@ -7,8 +7,8 @@ import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeToken;
 import org.springframework.stereotype.Component;
 
-import recordstore.apresentacao.acervo.midia.MidiaFormulario.MidiaoDto;
-import recordstore.dominio.acervo.artista.Artistad;
+import recordstore.apresentacao.acervo.midia.MidiaFormulario.MidiaDto;
+import recordstore.dominio.acervo.artista.ArtistaId;
 import recordstore.dominio.acervo.exemplar.ExemplarId;
 import recordstore.dominio.acervo.midia.CodigoBarra;
 import recordstore.dominio.acervo.midia.CodigoBarraFabrica;
@@ -17,46 +17,73 @@ import recordstore.dominio.administracao.socio.SocioId;
 
 @Component
 public class BackendMapeador extends ModelMapper {
-	private CodigoBarraabrica codigoBarraFabrica;
 
-	BackendMapeador() {
-		codigoBarraFabrica = new CodigoBarraFabrica();
+    private final CodigoBarraFabrica codigoBarraFabrica;
 
-		addConverter(new AbstractConverter<MidiaDto, Midia>() {
-			@Override
-			protected Midia convert(MidiaDto source) {
-				var id = map(source.id, CodigoBarra.class);
-				List<ArtistaId> artistas = map(source.artistas, new TypeToken<List<ArtistaId>>() {
-				}.getType());
+    public BackendMapeador() {
+        this.codigoBarraFabrica = new CodigoBarraFabrica();
 
-				return new Midia(id, source.titulo, source.subTitulo, artistas);
-			}
-		});
+        // MidiaDto (do formulário) -> Midia (domínio)
+        addConverter(new AbstractConverter<MidiaDto, Midia>() {
+            @Override
+            protected Midia convert(MidiaDto source) {
+                if (source == null) {
+                    return null;
+                }
 
-		addConverter(new AbstractConverter<String, CodigoBarra>() {
-			@Override
-			protected CodigoBarra convert(String source) {
-				return codigoBarraFabrica.construir(source);
-			}
-		});
+                CodigoBarra id = codigoBarraFabrica.construir(source.id);
 
-		addConverter(new AbstractConverter<Integer, SocioId>() {
-			@Override
-			protected SocioId convert(Integer source) {
-				return new SocioId(source);
-			}
-		});
+                List<ArtistaId> artistas = map(
+                        source.artistas, // List<Integer> de ids
+                        new TypeToken<List<ArtistaId>>() {}.getType()
+                );
 
-		addConverter(new AbstractConverter<Integer, ExemplarId>() {
-			@Override
-			protected ExemplarId convert(Integer source) {
-				return new ExemplarId(source);
-			}
-		});
-	}
+                // descricao = null, pois não vem do formulário
+                return new Midia(
+                        id,
+                        source.titulo,
+                        source.subTitulo,
+                        null,
+                        artistas
+                );
+            }
+        });
 
-	@Override
-	public <D> D map(Object source, Class<D> destinationType) {
-		return source != null ? super.map(source, destinationType) : null;
-	}
+        // String -> CodigoBarra
+        addConverter(new AbstractConverter<String, CodigoBarra>() {
+            @Override
+            protected CodigoBarra convert(String source) {
+                return codigoBarraFabrica.construir(source);
+            }
+        });
+
+        // Integer -> SocioId
+        addConverter(new AbstractConverter<Integer, SocioId>() {
+            @Override
+            protected SocioId convert(Integer source) {
+                return new SocioId(source);
+            }
+        });
+
+        // Integer -> ExemplarId
+        addConverter(new AbstractConverter<Integer, ExemplarId>() {
+            @Override
+            protected ExemplarId convert(Integer source) {
+                return new ExemplarId(source);
+            }
+        });
+
+        // Integer -> ArtistaId (necessário para mapear List<Integer> -> List<ArtistaId>)
+        addConverter(new AbstractConverter<Integer, ArtistaId>() {
+            @Override
+            protected ArtistaId convert(Integer source) {
+                return new ArtistaId(source);
+            }
+        });
+    }
+
+    @Override
+    public <D> D map(Object source, Class<D> destinationType) {
+        return source != null ? super.map(source, destinationType) : null;
+    }
 }

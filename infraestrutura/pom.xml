@@ -8,36 +8,40 @@
 		<groupId>recordstore</groupId>
 		<artifactId>recordstore-pai</artifactId>
 		<version>0.0.1-SNAPSHOT</version>
-	    <relativePath>../pai</relativePath>
+	    <relativePath>../pai/pom.xml</relativePath>
 	</parent>
 
 	<artifactId>recordstore-infraestrutura</artifactId>
 
-	<dependencies>
-		<dependency>
-		    <groupId>org.flywaydb</groupId>
-		    <artifactId>flyway-core</artifactId>
-		</dependency>
-		
-		<dependency>
-		    <groupId>org.flywaydb</groupId>
-		    <artifactId>flyway-database-postgresql</artifactId>
-		</dependency>		
+<dependencies>
+    <dependency>
+        <groupId>org.flywaydb</groupId>
+        <artifactId>flyway-core</artifactId>
+        <version>10.21.0</version> <!-- ou a versão que você quiser -->
+    </dependency>
 
-		<dependency>
-		    <groupId>org.modelmapper</groupId>
-		    <artifactId>modelmapper</artifactId>
-		</dependency>		
+    <dependency>
+        <groupId>org.flywaydb</groupId>
+        <artifactId>flyway-database-postgresql</artifactId>
+        <version>10.21.0</version> <!-- mesma versão do core -->
+    </dependency>
 
-		<dependency>
-		    <groupId>org.springframework.boot</groupId>
-		    <artifactId>spring-boot-starter-data-jpa</artifactId>
-		</dependency>
+    <dependency>
+        <groupId>org.modelmapper</groupId>
+        <artifactId>modelmapper</artifactId>
+    </dependency>
 
-		<dependency>
-			<groupId>${project.groupId}</groupId>
-			<artifactId>recordstore-aplicacao</artifactId>
-			<version>${project.version}</version>
-		</dependency>	
-	</dependencies>		
+    <dependency>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-data-jpa</artifactId>
+        <version>3.3.4</version>
+    </dependency>
+
+    <dependency>
+        <groupId>${project.groupId}</groupId>
+        <artifactId>recordstore-aplicacao</artifactId>
+        <version>${project.version}</version>
+    </dependency>
+</dependencies>
+
 </project>

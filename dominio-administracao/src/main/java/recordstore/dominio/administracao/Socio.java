@@ -1,53 +1,52 @@
-
-package recordstore.dominio.administracao.socio;
+package recordstore.dominio.administracao;
 
 import static org.apache.commons.lang3.Validate.notNull;
 
+import recordstore.dominio.administracao.socio.SocioId;
+
 public class Socio {
-	private final SocioId id;
 
-	private String nome;
-	private Email emailContato;
+    private final SocioId id;
+    private String nome;
+    private Email emailContato;
 
-	public Socio(String nome, Email emailContato) {
-		id = null;
+    public Socio(String nome, Email emailContato) {
+        this.id = null;
+        setNome(nome);
+        setEmailContato(emailContato);
+    }
 
-		setNome(nome);
-		setEmailContato(emailContato);
-	}
+    public Socio(SocioId id, String nome, Email emailContato) {
+        notNull(id, "O id não pode ser nulo");
+        this.id = id;
+        setNome(nome);
+        setEmailContato(emailContato);
+    }
 
-	public Socio(SocioId id, String nome, Email emailContato) {
-		notNull(id, "O id não pode ser nulo");
-		this.id = id;
-	}
+    public SocioId getId() {
+        return id;
+    }
 
-	public SocioId getId() {
-		return id;
-	}
+    private void setNome(String nome) {
+        notNull(nome, "O nome não pode ser nulo");
+        this.nome = nome;
+    }
 
-	private void setNome(String nome) {
-		notNull(nome, "O nome não pode ser nulo");
-		notNull(nome, "O nome não pode estar em branco");
+    public String getNome() {
+        return nome;
+    }
 
-		this.nome = nome;
-	}
+    private void setEmailContato(Email emailContato) {
+        notNull(emailContato, "O email de contato não pode ser nulo");
+        this.emailContato = emailContato;
+    }
 
-	public String getNome() {
-		return nome;
-	}
+    public Email getEmailContato() {
+        return emailContato;
+    }
 
-	private void setEmailContato(Email emailContato) {
-		notNull(nome, "O email de contato não pode ser nulo");
-
-		this.emailContato = emailContato;
-	}
-
-	public Email getEmailContato() {
-		return emailContato;
-	}
-
-	@Override
-	public String toString() {
-		return nome;
-	}
+    @Override
+    public String toString() {
+        return nome;
+    }
 }

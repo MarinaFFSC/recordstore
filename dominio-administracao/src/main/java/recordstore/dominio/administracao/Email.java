@@ -1,5 +1,5 @@
 
-package recordstore.dominio.administracao.socio;
+package recordstore.dominio.administracao;
 
 import org.apache.commons.validator.routines.EmailValidator;
 

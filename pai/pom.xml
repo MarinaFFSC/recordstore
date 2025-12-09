@@ -1,118 +1,160 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
-         https://maven.apache.org/xsd/maven-4.0.0.xsd">
-	<modelVersion>4.0.0</modelVersion>
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
 
-	<parent>
-	    <groupId>org.springframework.boot</groupId>
-	    <artifactId>spring-boot-starter-parent</artifactId>
-	    <version>3.5.7</version>
-	    <relativePath/>
-	</parent>
+    <!-- ESTE É O POM PAI -->
+    <groupId>recordstore</groupId>
+    <artifactId>recordstore-pai</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
+    <packaging>pom</packaging>
 
-	<groupId>recordstore</groupId>
-	<groupId>recordstore</groupId>
-	<artifactId>-pai</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
-	
-	<packaging>pom</packaging>
+    <properties>
+        <!-- encoding e versão do Java -->
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <maven.compiler.source>17</maven.compiler.source>
+        <maven.compiler.target>17</maven.compiler.target>
 
-	<properties>
-		<cucumber.version>7.21.1</cucumber.version>
-	</properties>
+        <!-- já existia no seu pai -->
+        <cucumber.version>7.21.1</cucumber.version>
+    </properties>
 
-	<build>
-		<plugins>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-surefire-plugin</artifactId>
-			</plugin>
-      			
-			<plugin>
-				<groupId>com.github.ferstl</groupId>
-				<artifactId>depgraph-maven-plugin</artifactId>
-				<version>4.0.3</version>
-				<executions>
-					<execution>
-						<phase>generate-sources</phase>
-						<goals>
-							<goal>graph</goal>
-						</goals>
-					</execution>
-				</executions>				
-				<configuration>
-					<graphFormat>puml</graphFormat>
-					<showDuplicates>true</showDuplicates>
-					<includes>
-						<include>recordstore*</include>
-					</includes>					
-				</configuration>
-			</plugin>
-		</plugins>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+            </plugin>
 
-		<pluginManagement>
-			<plugins>
-				<!--This plugin's configuration is used to store Eclipse m2e settings only. It has no influence on the Maven build itself.-->
-				<plugin>
-					<groupId>org.eclipse.m2e</groupId>
-					<artifactId>lifecycle-mapping</artifactId>
-					<version>1.0.0</version>
-					<configuration>
-						<lifecycleMappingMetadata>
-							<pluginExecutions>
-								<pluginExecution>
-									<pluginExecutionFilter>
-										<groupId>
-											com.github.ferstl
-										</groupId>
-										<artifactId>
-											depgraph-maven-plugin
-										</artifactId>
-										<versionRange>
-											[4.0.3,)
-										</versionRange>
-										<goals>
-											<goal>graph</goal>
-										</goals>
-									</pluginExecutionFilter>
-									<action>
-										<ignore></ignore>
-									</action>
-								</pluginExecution>
-							</pluginExecutions>
-						</lifecycleMappingMetadata>
-					</configuration>
-				</plugin>
-			</plugins>
-		</pluginManagement>
-	</build>
-	
+            <plugin>
+                <groupId>com.github.ferstl</groupId>
+                <artifactId>depgraph-maven-plugin</artifactId>
+                <version>4.0.3</version>
+                <executions>
+                    <execution>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>graph</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <graphFormat>puml</graphFormat>
+                    <showDuplicates>true</showDuplicates>
+                    <includes>
+                        <include>recordstore*</include>
+                    </includes>
+                </configuration>
+            </plugin>
+        </plugins>
+
+        <pluginManagement>
+            <plugins>
+                <!-- Configuração m2e (Eclipse) para ignorar o depgraph -->
+                <plugin>
+                    <groupId>org.eclipse.m2e</groupId>
+                    <artifactId>lifecycle-mapping</artifactId>
+                    <version>1.0.0</version>
+                    <configuration>
+                        <lifecycleMappingMetadata>
+                            <pluginExecutions>
+                                <pluginExecution>
+                                    <pluginExecutionFilter>
+                                        <groupId>com.github.ferstl</groupId>
+                                        <artifactId>depgraph-maven-plugin</artifactId>
+                                        <versionRange>[4.0.3,)</versionRange>
+                                        <goals>
+                                            <goal>graph</goal>
+                                        </goals>
+                                    </pluginExecutionFilter>
+                                    <action>
+                                        <ignore/>
+                                    </action>
+                                </pluginExecution>
+                            </pluginExecutions>
+                        </lifecycleMappingMetadata>
+                    </configuration>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+    </build>
+
 	<dependencyManagement>
-		<dependencies>
-			<dependency>
-				<groupId>com.vaadin</groupId>
-				<artifactId>vaadin-spring-boot-starter</artifactId>
-				<version>24.9.4</version>
-			</dependency>			
-			
-			<dependency>
-			    <groupId>commons-validator</groupId>
-			    <artifactId>commons-validator</artifactId>
-			    <version>1.9.0</version>
-			</dependency>
-						
-			<dependency>
-			    <groupId>org.modelmapper</groupId>
-			    <artifactId>modelmapper</artifactId>
-			    <version>3.2.2</version>
-			</dependency>
-			
-			<dependency>
-			    <groupId>org.springdoc</groupId>
-			    <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
-			    <version>2.8.6</version>
-			</dependency>			
-		</dependencies>		
+	    <dependencies>
+	        <!-- Já existiam (ou a gente já tinha comentado) -->
+	        <dependency>
+	            <groupId>com.vaadin</groupId>
+	            <artifactId>vaadin-spring-boot-starter</artifactId>
+	            <version>24.9.4</version>
+	        </dependency>
+	
+	        <dependency>
+	            <groupId>commons-validator</groupId>
+	            <artifactId>commons-validator</artifactId>
+	            <version>1.9.0</version>
+	        </dependency>
+	
+	        <dependency>
+	            <groupId>org.modelmapper</groupId>
+	            <artifactId>modelmapper</artifactId>
+	            <version>3.2.2</version>
+	        </dependency>
+	
+	        <dependency>
+	            <groupId>org.springdoc</groupId>
+	            <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
+	            <version>2.8.6</version>
+	        </dependency>
+	
+	        <!-- 🔹 Libs que estavam DANDO ERRO por falta de versão -->
+	
+	        <!-- commons-lang3 usado nos módulos de domínio -->
+	        <dependency>
+	            <groupId>org.apache.commons</groupId>
+	            <artifactId>commons-lang3</artifactId>
+	            <version>3.14.0</version>
+	        </dependency>
+	
+	        <!-- H2 usado em apresentacao-backend e apresentacao-vaadin -->
+	        <dependency>
+	            <groupId>com.h2database</groupId>
+	            <artifactId>h2</artifactId>
+	            <version>2.2.224</version>
+	        </dependency>
+	
+	        <!-- Postgres usado em apresentacao-backend e apresentacao-vaadin -->
+	        <dependency>
+	            <groupId>org.postgresql</groupId>
+	            <artifactId>postgresql</artifactId>
+	            <version>42.7.4</version>
+	        </dependency>
+	
+	        <!-- Flyway usado em infraestrutura -->
+	        <dependency>
+	            <groupId>org.flywaydb</groupId>
+	            <artifactId>flyway-core</artifactId>
+	            <version>10.21.0</version>
+	        </dependency>
+	
+	        <dependency>
+	            <groupId>org.flywaydb</groupId>
+	            <artifactId>flyway-database-postgresql</artifactId>
+	            <version>10.21.0</version>
+	        </dependency>
+	
+	        <!-- (Opcional) Spring Boot, se quiser fixar também -->
+	        <dependency>
+	            <groupId>org.springframework.boot</groupId>
+	            <artifactId>spring-boot-starter-web</artifactId>
+	            <version>3.3.4</version>
+	        </dependency>
+	
+	        <dependency>
+	            <groupId>org.springframework.boot</groupId>
+	            <artifactId>spring-boot-starter-data-jpa</artifactId>
+	            <version>3.3.4</version>
+	        </dependency>
+	    </dependencies>
 	</dependencyManagement>
+
 </project>
