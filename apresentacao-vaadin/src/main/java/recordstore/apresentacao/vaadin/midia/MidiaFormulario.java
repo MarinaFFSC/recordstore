@@ -72,16 +72,38 @@ public class MidiaFormulario extends VerticalLayout {
         return valor.length() > 0 ? valor : null;
     }
 
-    // ================== ESTILO DOS INPUTS ==================
+
+    // ================== ESTILO DOS INPUTS (UPDATED) ==================
 
     private void estilizarCampoInput(HasStyle field) {
         field.getStyle()
-                .set("--vaadin-input-field-background", "#1A0D12")
-                .set("--vaadin-input-field-border-color", "rgba(247,233,215,0.28)")
-                .set("--vaadin-input-field-hover-border-color", "#F7E9D7")
-                .set("--vaadin-input-field-focus-ring-color", "#E85D2A")
-                .set("--vaadin-input-field-label-color", "#F7E9D7")
-                .set("--vaadin-input-field-value-color", "#F7E9D7")
-                .set("--vaadin-input-field-placeholder-color", "#C9B7A8");
+            /* Background + borders */
+            .set("--vaadin-input-field-background", "#23171C")
+            .set("--vaadin-input-field-border-color", "#6A545E")
+            .set("--vaadin-input-field-hover-border-color", "#F7E9D7")
+            .set("--vaadin-input-field-focused-border-color", "#F7E9D7")  // <-- white border when focused
+
+            /* Remove Vaadin default blue outline */
+            .set("--vaadin-focus-ring-color", "transparent")
+
+            /* Fixes for Lumo default blue */
+            .set("--lumo-primary-color", "white")            // <---- THIS removes blue selection/caret
+            .set("--lumo-primary-text-color", "white")
+            .set("--lumo-primary-contrast-color", "black")
+            
+
+            /* Text colors */
+            .set("--vaadin-input-field-value-color", "#3B2730")
+            .set("--vaadin-input-field-label-color", "#F7E9D7")
+            .set("--vaadin-input-field-placeholder-color", "#C9B7A8")
+
+            .set("--vaadin-input-field-background", "#FFFFFF") // container
+            .set("--vaadin-input-field-background-color", "#FFFFFF")// fundo REAL do input
+
+            /* Caret (cursor) color */
+            .set("--vaadin-input-field-caret-color", "white")
+
+            /* cleaner padding */
+            .set("--vaadin-input-field-padding", "0.4rem 0.75rem");
     }
 }

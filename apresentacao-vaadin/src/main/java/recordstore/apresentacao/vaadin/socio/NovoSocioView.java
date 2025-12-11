@@ -92,17 +92,34 @@ public class NovoSocioView extends VerticalLayout {
         add(card);
     }
 
-    // ========== Estilo dos campos ==========
+ // ========== ESTILO DOS INPUTS ==========
+
     private void estilizarCampoInput(HasStyle field) {
         field.getStyle()
-                .set("--vaadin-input-field-background", "#1A0D12")
-                .set("--vaadin-input-field-border-color", "rgba(247,233,215,0.28)")
-                .set("--vaadin-input-field-hover-border-color", "#F7E9D7")
-                .set("--vaadin-input-field-focus-ring-color", "#E85D2A")
-                .set("--vaadin-input-field-label-color", "#F7E9D7")
-                .set("--vaadin-input-field-value-color", "#F7E9D7")
-                .set("--vaadin-input-field-placeholder-color", "#C9B7A8");
+            // fundo e bordas
+            .set("--vaadin-input-field-background", "#23171C")
+            .set("--vaadin-input-field-border-color", "#6A545E")
+            .set("--vaadin-input-field-hover-border-color", "#3B2730")
+            .set("--vaadin-input-field-focused-border-color", "#F7E9D7")
+
+            // tira azul padrão
+            .set("--vaadin-focus-ring-color", "transparent")
+            .set("--lumo-primary-color", "#F7E9D7")
+            .set("--lumo-primary-text-color", "#F7E9D7")
+            .set("--lumo-primary-contrast-color", "#000000")
+            .set("--vaadin-input-field-caret-color", "#F7E9D7")
+    
+            .set("--vaadin-input-field-background", "#FFFFFF") // container
+            .set("--vaadin-input-field-background-color", "#FFFFFF")// fundo REAL do input
+            
+            // texto
+            .set("--vaadin-input-field-value-color", "#3B2730")
+            .set("--vaadin-input-field-label-color", "#F7E9D7")
+            .set("--vaadin-input-field-placeholder-color", "#C9B7A8")
+
+            .set("--vaadin-input-field-padding", "0.4rem 0.75rem");
     }
+
 
     // ========== Estilo do botão primário ==========
     private void estilizarBotaoPrimario(Button button) {

@@ -3,6 +3,7 @@ package recordstore.apresentacao.vaadin.midia;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import com.vaadin.flow.component.HasStyle;
 import com.vaadin.flow.component.combobox.MultiSelectComboBox;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.formlayout.FormLayout;
@@ -179,9 +180,11 @@ public class MidiaAdminView extends VerticalLayout implements BeforeEnterObserve
         idField.setMin(1);
         idField.setStep(1);
         idField.setWidthFull();
+        estilizarCampoInput(idField);
 
         TextField nomeField = new TextField("Nome do artista");
         nomeField.setWidthFull();
+        estilizarCampoInput(nomeField);
 
         Button salvar = new Button("Cadastrar artista", e -> {
             try {
@@ -268,10 +271,16 @@ public class MidiaAdminView extends VerticalLayout implements BeforeEnterObserve
         descricaoField.setWidthFull();
         descricaoField.setHeight("90px");
 
+        estilizarCampoInput(codigoField);
+        estilizarCampoInput(tituloField);
+        estilizarCampoInput(subtituloField);
+        estilizarCampoInput(descricaoField);
+
         artistasCombo = new MultiSelectComboBox<>("Artistas");
         artistasCombo.setItemLabelGenerator(a -> a.getId() + " - " + a.getNome());
         artistasCombo.setPlaceholder("Selecione um ou mais artistas");
         artistasCombo.setWidthFull();
+        estilizarCampoInput(artistasCombo);
 
         Button salvarMidia = new Button("Cadastrar mídia", e -> {
             try {
@@ -373,6 +382,7 @@ public class MidiaAdminView extends VerticalLayout implements BeforeEnterObserve
 
         TextField codigoMidiaField = new TextField("Código de barras da mídia (já cadastrada)");
         codigoMidiaField.setWidthFull();
+        estilizarCampoInput(codigoMidiaField);
 
         Button criarExemplar = new Button("Criar exemplar", e -> {
             try {
@@ -430,5 +440,33 @@ public class MidiaAdminView extends VerticalLayout implements BeforeEnterObserve
                 .set("font-weight", "500")
                 .set("border-radius", "999px")
                 .set("margin-top", "0.5rem");
+    }
+
+    // ========== ESTILO DOS INPUTS ==========
+
+    private void estilizarCampoInput(HasStyle field) {
+        field.getStyle()
+            // fundo e bordas
+            .set("--vaadin-input-field-background", "#23171C")
+            .set("--vaadin-input-field-border-color", "#6A545E")
+            .set("--vaadin-input-field-hover-border-color", "#3B2730")
+            .set("--vaadin-input-field-focused-border-color", "#F7E9D7")
+
+            // tira azul padrão
+            .set("--vaadin-focus-ring-color", "transparent")
+            .set("--lumo-primary-color", "#F7E9D7")
+            .set("--lumo-primary-text-color", "#F7E9D7")
+            .set("--lumo-primary-contrast-color", "#000000")
+            .set("--vaadin-input-field-caret-color", "#F7E9D7")
+    
+            .set("--vaadin-input-field-background", "#FFFFFF") // container
+            .set("--vaadin-input-field-background-color", "#FFFFFF")// fundo REAL do input
+            
+            // texto
+            .set("--vaadin-input-field-value-color", "#3B2730")
+            .set("--vaadin-input-field-label-color", "#F7E9D7")
+            .set("--vaadin-input-field-placeholder-color", "#C9B7A8")
+
+            .set("--vaadin-input-field-padding", "0.4rem 0.75rem");
     }
 }
