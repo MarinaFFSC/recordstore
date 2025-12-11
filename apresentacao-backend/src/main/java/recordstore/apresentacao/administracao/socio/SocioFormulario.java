@@ -5,4 +5,5 @@ public class SocioFormulario {
     public Integer id;
     public String nome;
     public String email;
+    public String senha;
 }

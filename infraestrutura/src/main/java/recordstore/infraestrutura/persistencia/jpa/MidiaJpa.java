@@ -29,7 +29,7 @@ import jakarta.transaction.Transactional;
 class MidiaJpa {
 	@Id
 	String id;
-
+	String descricao;
 	String titulo;
 	String subtitulo;
 

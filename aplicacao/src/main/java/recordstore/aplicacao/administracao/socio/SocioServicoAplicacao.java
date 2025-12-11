@@ -6,6 +6,7 @@ import java.util.List;
 
 import recordstore.dominio.administracao.Email;
 import recordstore.dominio.administracao.Socio;
+import recordstore.dominio.administracao.Password;
 import recordstore.dominio.administracao.SocioRepositorio;
 import recordstore.dominio.administracao.socio.SocioId;
 
@@ -26,10 +27,17 @@ public class SocioServicoAplicacao {
         return repositorioAplicacao.pesquisarResumos();
     }
 
-    public void criar(Integer id, String nome, String email) {
+    public void criar(Integer id, String nome, String email, String senha) {
+        if (repositorioAplicacao.existePorId(id)) {
+            throw new IllegalArgumentException("Já existe um sócio cadastrado com esse ID.");
+        }
+
         var socioId = new SocioId(id);
-        var emailVo = new Email(email);       // usa o Value Object de domínio
-        var socio = new Socio(socioId, nome, emailVo);
+        var emailVo = new Email(email);
+        var Senha = new Password(senha);
+        var socio = new Socio(socioId, nome, emailVo, Senha);
+
         repositorioDominio.salvar(socio);
     }
+
 }

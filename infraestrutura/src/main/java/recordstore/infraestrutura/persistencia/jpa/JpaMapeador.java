@@ -23,6 +23,7 @@ import recordstore.dominio.acervo.midia.Midia;
 import recordstore.dominio.administracao.Email;
 import recordstore.dominio.administracao.Socio;
 import recordstore.dominio.administracao.socio.SocioId;
+import recordstore.dominio.administracao.Password;
 
 @Component
 class JpaMapeador extends ModelMapper {
@@ -95,9 +96,25 @@ class JpaMapeador extends ModelMapper {
 			protected Socio convert(SocioJpa source) {
 				var id = map(source.id, SocioId.class);
 				var email = map(source.email, Email.class);
-				return new Socio(id, source.nome, email);
+				var senha = new Password(source.senha);
+				return new Socio(id, source.nome, email, senha);
 			}
 		});
+		
+		addConverter(new AbstractConverter<Socio, SocioJpa>() {
+		    @Override
+		    protected SocioJpa convert(Socio source) {
+		        SocioJpa target = new SocioJpa();
+		        // Ajuste os getters conforme o seu domínio:
+		        target.id    = source.getId() != null ? source.getId().getId() : null;
+		        target.nome  = source.getNome();
+		        target.email = source.getEmailContato().getEndereco();   // ou getEndereco(), dependendo da sua classe Email
+		        target.senha = source.getSenha().getValor();   // campo String na entidade JPA
+
+		        return target;
+		    }
+		});
+
 
 		addConverter(new AbstractConverter<Integer, SocioId>() {
 			@Override

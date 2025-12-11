@@ -6,4 +6,6 @@ public interface MidiaResumo {
 	String getTitulo();
 
 	String getSubtitulo();
+	
+	String getDescricao();
 }

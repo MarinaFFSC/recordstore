@@ -1,6 +1,6 @@
 package recordstore.aplicacao.acervo.artista;
 
 public interface ArtistaResumo {
-    String getId();
+    Integer getId();
     String getNome();
 }

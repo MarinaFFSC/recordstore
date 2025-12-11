@@ -26,7 +26,7 @@ public class SocioControlador {
     
     @PostMapping("/socios")
     public void criar(@RequestBody SocioFormulario form) {
-        servico.criar(form.id, form.nome, form.email);
+        servico.criar(form.id, form.nome, form.email, form.senha);
     }
 
 }

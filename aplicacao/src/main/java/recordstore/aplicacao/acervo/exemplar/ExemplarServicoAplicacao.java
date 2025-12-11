@@ -20,4 +20,12 @@ public class ExemplarServicoAplicacao {
     public List<ExemplarResumoExpandido> pesquisarEmprestados() {
         return repositorio.pesquisarEmprestados();
     }
+
+    public void criarExemplares(String codigoMidia, int quantidade) {
+        repositorio.criarExemplares(codigoMidia, quantidade);
+    }
+
+    public void removerPorIds(List<String> ids) {
+        repositorio.removerPorIds(ids);
+    }
 }

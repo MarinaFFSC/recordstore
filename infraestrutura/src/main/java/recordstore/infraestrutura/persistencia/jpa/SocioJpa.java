@@ -10,7 +10,7 @@ public class SocioJpa {
 
     @Id
     int id;
-
+    String senha;
     String nome;
     String email;
 

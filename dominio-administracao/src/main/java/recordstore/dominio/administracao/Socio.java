@@ -9,18 +9,21 @@ public class Socio {
     private final SocioId id;
     private String nome;
     private Email emailContato;
+    private Password senha;
 
-    public Socio(String nome, Email emailContato) {
+    public Socio(String nome, Email emailContato, Password senha) {
         this.id = null;
         setNome(nome);
         setEmailContato(emailContato);
+        setSenha(senha);
     }
 
-    public Socio(SocioId id, String nome, Email emailContato) {
+    public Socio(SocioId id, String nome, Email emailContato, Password senha) {
         notNull(id, "O id não pode ser nulo");
         this.id = id;
         setNome(nome);
         setEmailContato(emailContato);
+        setSenha(senha);
     }
 
     public SocioId getId() {
@@ -34,6 +37,15 @@ public class Socio {
 
     public String getNome() {
         return nome;
+    }
+    
+    private void setSenha(Password senha) {
+    	notNull(senha, "A senha não pode ser nula");
+        this.senha = senha;
+    }
+    
+    public Password getSenha() {
+        return senha;
     }
 
     private void setEmailContato(Email emailContato) {
