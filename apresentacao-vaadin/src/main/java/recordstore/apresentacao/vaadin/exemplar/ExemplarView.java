@@ -176,6 +176,7 @@ public class ExemplarView extends VerticalLayout {
         .set("--lumo-primary-text-color", "#F7E9D7")
         .set("--lumo-primary-contrast-color", "#000000")
         .set("--vaadin-input-field-caret-color", "#3B2730")
+        
 
         // texto
         .set("--vaadin-input-field-value-color", "#3B2730")
