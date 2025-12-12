@@ -1,26 +1,90 @@
-# Locadora de Mídias Físicas de Música
+# Sistema de Locadora de Mídias — Gestão Completa de Acervo, Sócios, Empréstimos e Multas
 
-Sistema desenvolvido em Java para o gerenciamento de locação de mídias físicas (CDs e vinis).  
-O projeto implementa princípios de DDD (Domain-Driven Design) e BDD (Behavior-Driven Development), aplicando regras de negócio reais e cenários de teste automatizados.
+![Java](https://img.shields.io/badge/java-%23ED8B00.svg?style=for-the-badge&logo=openjdk&logoColor=white)
+![SpringBoot](https://img.shields.io/badge/SpringBoot-6DB33F?style=for-the-badge&logo=springboot&logoColor=white)
+![Vaadin](https://img.shields.io/badge/Vaadin-1572B6?style=for-the-badge&logo=vaadin&logoColor=white)
+![BDD](https://img.shields.io/badge/BDD-Cucumber-23D96C?style=for-the-badge&logo=cucumber&logoColor=white)
+![MySQL](https://img.shields.io/badge/MySQL-005C84?style=for-the-badge&logo=mysql&logoColor=white)
+![Maven](https://img.shields.io/badge/Maven-C71A36?style=for-the-badge&logo=apachemaven&logoColor=white)
+
+## Descrição do Projeto
+Sistema desenvolvido em **Java + Spring Boot + Vaadin + MySQL**, com testes comportamentais baseados em **BDD (Cucumber)**.
+O objetivo é realizar o **gerenciamento completo da locação de mídias físicas** (CDs e vinis), aplicando:
+
+- **DDD (Domain-Driven Design)**
+- **BDD (Behavior-Driven Development)**
+- **Padrões de Projeto (Iterator, Proxy, Strategy, Observer)**
 
 ## Visão Geral do Domínio
+### Sócios
+- Consultam o catálogo  
+- Realizam empréstimos  
+- Devolvem mídias  
+- Visualizam multas e histórico  
+### Administradores
+- Gerenciam catálogo  
+- Cadastram e editam sócios  
+- Controlam multas  
+- Acompanham empréstimos  
 
-O sistema tem como objetivo gerenciar acervo físico de mídias musicais, permitindo o controle completo do ciclo de locação:
+## Subdomínios Principais
+- **Gerenciamento de Catálogo** (artistas, mídias, exemplares)  
+- **Controle de Empréstimos** (empréstimo, devolução, cálculo automático de multas)  
+- **Gestão de Usuários** (cadastro, edição e validação de pendências)  
 
-- Sócios: podem pesquisar o catálogo, realizar locações e acompanhar o histórico de empréstimos.  
-- Administradores: gerenciam o catálogo, usuários, reservas e devoluções.
+## Protótipos e Documentação
+- Documentação por entrega
+    - Entrega 1: https://drive.google.com/drive/folders/1EHRZCaNonCRC9wP_TEXDCAS-yGs_yjBt?usp=drive_link
+    - Entrega 2: https://drive.google.com/drive/folders/1Kl6AK6LYR0uapOnbydTWwRVs9KUbvOV1?usp=drive_link
+- Figma: https://www.figma.com/design/TM3M17MpYg7xxGHuBtwaS5/Requisitos-e-Validação-Software?node-id=0-1&p=f  
 
-### Subdomínios principais
 
-- Gerenciamento de Catálogo: Cadastro, edição e controle de disponibilidade das mídias.  
-- Controle de Empréstimos: Processos de locação, devolução, reservas e cálculo automático de multas.  
-- Gestão de Usuários: Cadastro, aprovação e bloqueio de clientes.  
+## Testes BDD (Cucumber)
+Todos os fluxos críticos foram descritos em cenários Given/When/Then.
+Cenários incluem:
+- Empréstimo válido  
+- Bloqueio por multas pendentes  
+- Devolução atrasada gerando multa  
+- Editar e excluir itens do catálogo  
+- Gestão de usuários
+  
+# Arquitetura da Aplicação
+### Frontend (Vaadin)
+- Interface declarativa e reativa  
+- Atualização automática via eventos de UI  
+### Backend
+- **Domínio**: Regras de negócio, entidades, serviços  
+- **Aplicação**: Orquestra processos  
+- **Infraestrutura**: JPA/MySQL  
+- **BDD**: Testes funcionais com Cucumber
+  
+## Padrões de Projeto Utilizados
+| Padrão | Implementação | Benefício |
+|-------|---------------|-----------|
+| **Iterator** | Iteração segura sobre exemplares | Evita acoplamento |
+| **Proxy** | EmprestimoServicoProxy | Intercepta violações de regras (multas, suspensão) |
+| **Strategy** | Cálculo de multas | Centraliza e facilita manutenção |
+| **Observer** | Events no Vaadin | Interface sempre sincronizada |
 
-#### Drive Documentação
-https://drive.google.com/drive/folders/1Kl6AK6LYR0uapOnbydTWwRVs9KUbvOV1?usp=drive_link
+## Guia de Execução do Sistema ( Passo a passo usando Eclipse)
+### 1. Pré-requisitos
+Instale:
+- Java **JDK 21**  
+- MySQL 8.0 (ou Docker)  
+- **Eclipse IDE** com suporte a Maven  
+- Plugin **Spring Tools Suite (STS)** e **Cucumber 3.0**
 
-#### Apresentação - Canva
-https://www.canva.com/design/DAG2Dbp-Xrw/KDwSES5gceaxJBfvD2pDIw/view?utm_content=DAG2Dbp-Xrw&utm_campaign=designshare&utm_medium=link2&utm_source=uniquelinks&utlId=h8281444297
+### Importando o Projeto no Eclipse
+1. Abra o **Eclipse**  
+2. Vá em **File -> Import**  
+3. Selecione **Existing Maven Project**  
+4. Escolha a pasta raiz do projeto  
+5. Aguarde o Maven baixar todas as dependências  
 
-#### Protótipo - FIGMA
-https://www.figma.com/design/TM3M17MpYg7xxGHuBtwaS5/Requisitos-e-Valida%C3%A7%C3%A3o-Software?node-id=0-1&p=f
+### Como Rodar a Aplicação
+1. Localize a classe principal do Spring Boot ( `VaadinApresencacao.java` )  
+2. Clique com o botão direito → **Run As -> Java Application**
+
+### Como Rodar os Testes
+1. Localize a classe runner ( `RunCucumberTest.java` )  
+2. Clique com o botão direito → **Run As -> JUnit**  
