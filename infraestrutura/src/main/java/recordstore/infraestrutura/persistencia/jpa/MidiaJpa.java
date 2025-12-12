@@ -27,76 +27,100 @@ import jakarta.transaction.Transactional;
 @Entity
 @Table(name = "MIDIA")
 class MidiaJpa {
-	@Id
-	String id;
-	String descricao;
-	String titulo;
-	String subtitulo;
+    @Id
+    String id;
+    String descricao;
+    String titulo;
+    String subtitulo;
 
-	@ManyToMany
-	@JoinTable(name = "MIDIA_ARTISTA", joinColumns = @JoinColumn(name = "MIDIA_ID"), inverseJoinColumns = @JoinColumn(name = "ARTISTA_ID"))
-	@OrderColumn(name = "ARTISTA_ORDEM")
-	List<ArtistaJpa> artistas;
+    @ManyToMany
+    @JoinTable(
+        name = "MIDIA_ARTISTA",
+        joinColumns = @JoinColumn(name = "MIDIA_ID"),
+        inverseJoinColumns = @JoinColumn(name = "ARTISTA_ID")
+    )
+    @OrderColumn(name = "ARTISTA_ORDEM")
+    List<ArtistaJpa> artistas;
 
-	@OneToMany(mappedBy = "midia")
-	Set<ExemplarJpa> exemplares;
+    @OneToMany(mappedBy = "midia")
+    Set<ExemplarJpa> exemplares;
 
-	@Override
-	public String toString() {
-		return titulo;
-	}
+    @Override
+    public String toString() {
+        return titulo;
+    }
 }
 
 interface MidiaJpaRepository extends JpaRepository<MidiaJpa, String> {
-	List<MidiaResumo> findMidiaResumoBy();
+    List<MidiaResumo> findMidiaResumoBy();
 
-	// @formatter:off
-	@Query("""
-			SELECT l AS midia,
+    // @formatter:off
+    @Query("""
+            SELECT l AS midia,
                    a AS artista,
                    COUNT(e) AS exemplaresDisponiveis,
-			       SIZE(l.exemplares) AS totalExemplares
-			  FROM MidiaJpa l
-	          JOIN l.artistas a
+                   SIZE(l.exemplares) AS totalExemplares
+              FROM MidiaJpa l
+              JOIN l.artistas a
          LEFT JOIN l.exemplares e
                 ON e.emprestimo IS NULL	    
-			 WHERE INDEX(a) = 0
+             WHERE INDEX(a) = 0
           GROUP BY l, a
           ORDER BY l.titulo
-			""")
-	// @formatter:on	
-	List<MidiaResumoExpandido> pesquisarResumosExpandidos();
+            """)
+    // @formatter:on	
+    List<MidiaResumoExpandido> pesquisarResumosExpandidos();
 }
 
 @Repository
 class MidiaRepositorioImpl implements MidiaRepositorio, MidiaRepositorioAplicacao {
-	@Autowired
-	MidiaJpaRepository repositorio;
 
-	@Autowired
-	JpaMapeador mapeador;
+    @Autowired
+    MidiaJpaRepository repositorio;
 
-	@Override
-	public void salvar(Midia midia) {
-		var midiaJpa = mapeador.map(midia, MidiaJpa.class);
-		repositorio.save(midiaJpa);
-	}
+    @Autowired
+    JpaMapeador mapeador;
 
-	@Transactional
-	@Override
-	public Midia obter(CodigoBarra codigoBarra) {
-		var codigo = codigoBarra.getCodigo();
-		var midiaJpa = repositorio.findById(codigo).get();
-		return mapeador.map(midiaJpa, Midia.class);
-	}
+    @Override
+    public void salvar(Midia midia) {
+        var midiaJpa = mapeador.map(midia, MidiaJpa.class);
+        repositorio.save(midiaJpa);
+    }
 
-	@Override
-	public List<MidiaResumo> pesquisarResumos() {
-		return repositorio.findMidiaResumoBy();
-	}
+    @Transactional
+    @Override
+    public Midia obter(CodigoBarra codigoBarra) {
+        var codigo = codigoBarra.getCodigo();
+        var midiaJpa = repositorio.findById(codigo).orElseThrow();
+        return mapeador.map(midiaJpa, Midia.class);
+    }
 
-	@Override
-	public List<MidiaResumoExpandido> pesquisarResumosExpandidos() {
-		return repositorio.pesquisarResumosExpandidos();
-	}
+    // ===== NOVO: EXCLUIR MÍDIA =====
+    @Transactional
+    @Override
+    public void excluir(CodigoBarra codigoBarra) {
+        var codigo = codigoBarra.getCodigo();
+
+        var midiaJpa = repositorio.findById(codigo)
+                .orElseThrow(() -> new IllegalArgumentException(
+                        "Mídia não encontrada para o código " + codigo));
+
+        // regra de segurança: não deixa excluir se tiver exemplares vinculados
+        if (midiaJpa.exemplares != null && !midiaJpa.exemplares.isEmpty()) {
+            throw new IllegalStateException(
+                    "Não é possível excluir a mídia porque existem exemplares cadastrados para ela.");
+        }
+
+        repositorio.delete(midiaJpa);
+    }
+
+    @Override
+    public List<MidiaResumo> pesquisarResumos() {
+        return repositorio.findMidiaResumoBy();
+    }
+
+    @Override
+    public List<MidiaResumoExpandido> pesquisarResumosExpandidos() {
+        return repositorio.pesquisarResumosExpandidos();
+    }
 }

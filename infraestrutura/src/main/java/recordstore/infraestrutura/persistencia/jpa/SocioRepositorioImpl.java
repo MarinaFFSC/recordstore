@@ -27,4 +27,10 @@ public class SocioRepositorioImpl implements SocioRepositorio {
         var socioJpa = repositorio.findById(id.getId()).orElseThrow();
         return mapeador.map(socioJpa, Socio.class);
     }
+
+    // ========== NOVO MÉTODO: EXCLUIR ==========
+    @Override
+    public void excluir(SocioId id) {
+        repositorio.deleteById(id.getId());
+    }
 }

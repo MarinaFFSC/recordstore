@@ -8,8 +8,6 @@ public interface ExemplarRepositorioAplicacao {
 
     List<ExemplarResumoExpandido> pesquisarEmprestados();
 
-    // NOVOS MÉTODOS:
-
     void criarExemplares(String codigoMidia, int quantidade);
 
     void removerPorIds(List<String> ids);

@@ -45,6 +45,7 @@ public class ExemplarView extends VerticalLayout {
         add(titulo);
 
         configurarFormulario();
+        configurarEstilosInputs();  // <<< aplica o tema branco nos campos
         configurarGrid();
         carregarExemplares();
 
@@ -61,7 +62,30 @@ public class ExemplarView extends VerticalLayout {
         quantidadeField.setMin(1);
         quantidadeField.setStep(1);
     }
-    
+
+    /**
+     * Ajusta o CSS dos inputs para:
+     * - label branco
+     * - fundo do input branco
+     * - texto digitado preto
+     */
+    private void configurarEstilosInputs() {
+        estilizarCampo(codigoMidiaField);
+        estilizarCampo(quantidadeField);
+    }
+
+    private void estilizarCampo(HasStyle field) {
+        field.getStyle()
+                // Label acima do campo
+                .set("--vaadin-input-field-label-color", "white")
+                // Fundo do quadrado do input
+                .set("--vaadin-input-field-background", "white")
+                // Borda do input (se quiser invisível, pode deixar igual ao fundo)
+                .set("--vaadin-input-field-border-color", "white")
+                // Cor do texto digitado
+                .set("--vaadin-input-field-value-color", "black");
+    }
+
     private void estilizarBotaoPrincipal(Button button) {
         button.getStyle()
                 .set("background-color", "#E85D2A")   // orange
@@ -96,7 +120,6 @@ public class ExemplarView extends VerticalLayout {
             .setHeader("Título da mídia")
             .setAutoWidth(true);
 
-        // ESTILO VISUAL: fundo claro + texto escuro
         grid.addThemeVariants(
                 GridVariant.LUMO_ROW_STRIPES,
                 GridVariant.LUMO_NO_BORDER
@@ -158,32 +181,4 @@ public class ExemplarView extends VerticalLayout {
             Notification.show("Erro ao remover exemplares: " + ex.getMessage(), 5000, Notification.Position.MIDDLE);
         }
     }
-    
- // ========== ESTILO DOS INPUTS ==========
-
-    private void estilizarCampoInput(HasStyle field) {
-        field.getStyle()
-     // fundo e bordas
-        .set("--vaadin-input-field-background", "#FFFFFF")          // fundo do container
-        .set("--vaadin-input-field-background-color", "#FFFFFF")    // fundo real do input
-        .set("--vaadin-input-field-border-color", "#6A545E")
-        .set("--vaadin-input-field-hover-border-color", "#3B2730")
-        .set("--vaadin-input-field-focused-border-color", "#F7E9D7")
-
-        // tira azul padrão
-        .set("--vaadin-focus-ring-color", "transparent")
-        .set("--lumo-primary-color", "#F7E9D7")
-        .set("--lumo-primary-text-color", "#F7E9D7")
-        .set("--lumo-primary-contrast-color", "#000000")
-        .set("--vaadin-input-field-caret-color", "#3B2730")
-        
-
-        // texto
-        .set("--vaadin-input-field-value-color", "#3B2730")
-        .set("--vaadin-input-field-label-color", "#F7E9D7")
-        .set("--vaadin-input-field-placeholder-color", "#C9B7A8")
-
-        .set("--vaadin-input-field-padding", "0.4rem 0.75rem");
-    }
 }
-    

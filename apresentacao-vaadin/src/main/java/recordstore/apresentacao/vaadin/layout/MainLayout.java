@@ -21,6 +21,7 @@ import recordstore.apresentacao.vaadin.socio.SocioView;
 import recordstore.apresentacao.vaadin.midia.MidiaAdminView;
 import recordstore.apresentacao.vaadin.exemplar.ExemplarView;
 import recordstore.apresentacao.vaadin.view.MultasAdminView;
+import recordstore.apresentacao.vaadin.view.AdminEmprestimosView;
 
 public class MainLayout extends AppLayout {
 
@@ -135,13 +136,16 @@ public class MainLayout extends AppLayout {
             RouterLink midiasAdmin = new RouterLink("Gerenciar mídias", MidiaAdminView.class);
             RouterLink exemplaresAdmin = new RouterLink("Gerenciar exemplares", ExemplarView.class);
             RouterLink multasAdmin = new RouterLink("Multas pendentes", MultasAdminView.class);
+            RouterLink emprestimosAdmin = new RouterLink("Empréstimos", AdminEmprestimosView.class);
+
 
             styleMenuLink(sociosAdmin);
             styleMenuLink(midiasAdmin);
             styleMenuLink(exemplaresAdmin);
             styleMenuLink(multasAdmin);
+            styleMenuLink(emprestimosAdmin);
 
-            menu.add(adminTitle, sociosAdmin, midiasAdmin, exemplaresAdmin, multasAdmin);
+            menu.add(adminTitle, sociosAdmin, midiasAdmin, exemplaresAdmin, multasAdmin, emprestimosAdmin);
         }
 
         nav.add(menu);

@@ -6,49 +6,53 @@ import recordstore.dominio.acervo.midia.CodigoBarra;
 import recordstore.dominio.administracao.socio.SocioId;
 import recordstore.dominio.evento.EventoBarramento;
 
-public class EmprestimoServico {
-	private final ExemplarRepositorio exemplarRepositorio;
-	private final EventoBarramento barramento;
+public class EmprestimoServico implements EmprestimoOperacoes {
 
-	public EmprestimoServico(ExemplarRepositorio exemplarRepositorio, EventoBarramento barramento) {
-		notNull(exemplarRepositorio, "O repositório de exemplares não pode ser nulo");
-		notNull(barramento, "O barramento de eventos não pode ser nulo");
+    private final ExemplarRepositorio exemplarRepositorio;
+    private final EventoBarramento barramento;
 
-		this.exemplarRepositorio = exemplarRepositorio;
-		this.barramento = barramento;
-	}
+    public EmprestimoServico(ExemplarRepositorio exemplarRepositorio, EventoBarramento barramento) {
+        notNull(exemplarRepositorio, "O repositório de exemplares não pode ser nulo");
+        notNull(barramento, "O barramento de eventos não pode ser nulo");
 
-	public void realizarEmprestimo(ExemplarId exemplarId, SocioId tomador) {
-		notNull(exemplarRepositorio, "O id do exemplar não pode ser nulo");
-		notNull(exemplarRepositorio, "O id do tomador não pode ser nulo");
+        this.exemplarRepositorio = exemplarRepositorio;
+        this.barramento = barramento;
+    }
 
-		var exemplar = exemplarRepositorio.obter(exemplarId);
-		var evento = exemplar.realizarEmprestimo(tomador);
-		exemplarRepositorio.salvar(exemplar);
-		barramento.postar(evento);
-	}
+    @Override
+    public void realizarEmprestimo(ExemplarId exemplarId, SocioId tomador) {
+        notNull(exemplarId, "O id do exemplar não pode ser nulo");
+        notNull(tomador, "O id do tomador não pode ser nulo");
 
-	public void realizarEmprestimo(CodigoBarra midiaId, SocioId tomador) {
-		notNull(midiaId, "O id da midia não pode ser nulo");
-		notNull(tomador, "O id do tomador não pode ser nulo");
+        var exemplar = exemplarRepositorio.obter(exemplarId);
+        var evento = exemplar.realizarEmprestimo(tomador);
+        exemplarRepositorio.salvar(exemplar);
+        barramento.postar(evento);
+    }
 
-		var disponiveis = exemplarRepositorio.pesquisarDisponiveis(midiaId);
-		if (disponiveis.isEmpty()) {
-			throw new IllegalArgumentException("O midia não possui exemplares disponíveis para empréstimo");
-		}
+    @Override
+    public void realizarEmprestimo(CodigoBarra midiaId, SocioId tomador) {
+        notNull(midiaId, "O id da midia não pode ser nulo");
+        notNull(tomador, "O id do tomador não pode ser nulo");
 
-		var exemplar = disponiveis.get(0);
-		var exemplarId = exemplar.getId();
+        var disponiveis = exemplarRepositorio.pesquisarDisponiveis(midiaId);
+        if (disponiveis.isEmpty()) {
+            throw new IllegalArgumentException("A mídia não possui exemplares disponíveis para empréstimo");
+        }
 
-		realizarEmprestimo(exemplarId, tomador);
-	}
+        var exemplar = disponiveis.get(0);
+        var exemplarId = exemplar.getId();
 
-	public void devolver(ExemplarId exemplarId) {
-		notNull(exemplarId, "O id do exemplar não pode ser nulo");
+        realizarEmprestimo(exemplarId, tomador);
+    }
 
-		var exemplar = exemplarRepositorio.obter(exemplarId);
-		var evento = exemplar.devolver();
-		exemplarRepositorio.salvar(exemplar);
-		barramento.postar(evento);
-	}
+    @Override
+    public void devolver(ExemplarId exemplarId) {
+        notNull(exemplarId, "O id do exemplar não pode ser nulo");
+
+        var exemplar = exemplarRepositorio.obter(exemplarId);
+        var evento = exemplar.devolver();
+        exemplarRepositorio.salvar(exemplar);
+        barramento.postar(evento);
+    }
 }

@@ -1,7 +1,6 @@
 package recordstore.apresentacao.vaadin.view;
 
 import java.time.LocalDate;
-import java.time.temporal.ChronoUnit;
 import java.util.List;
 
 import com.vaadin.flow.component.button.Button;
@@ -21,6 +20,8 @@ import recordstore.apresentacao.vaadin.layout.MainLayout;
 import recordstore.apresentacao.vaadin.login.LoginView;
 import recordstore.aplicacao.acervo.exemplar.ExemplarResumoExpandido;
 import recordstore.aplicacao.acervo.exemplar.ExemplarServicoAplicacao;
+import recordstore.aplicacao.analise.MultaCalculadoraServico;
+import recordstore.aplicacao.analise.MultaSolicitacaoServico;
 import recordstore.aplicacao.administracao.socio.SocioResumo;
 import recordstore.dominio.acervo.exemplar.EmprestimoServico;
 import recordstore.dominio.acervo.exemplar.ExemplarId;
@@ -30,14 +31,20 @@ public class MultasAdminView extends VerticalLayout implements BeforeEnterObserv
 
     private final ExemplarServicoAplicacao exemplarServico;
     private final EmprestimoServico emprestimoServico;
+    private final MultaCalculadoraServico multaServico;
+    private final MultaSolicitacaoServico multaSolicitacaoServico;
 
     private final Grid<ExemplarResumoExpandido> grid =
             new Grid<>(ExemplarResumoExpandido.class, false);
 
     public MultasAdminView(ExemplarServicoAplicacao exemplarServico,
-                           EmprestimoServico emprestimoServico) {
+                           EmprestimoServico emprestimoServico,
+                           MultaCalculadoraServico multaServico,
+                           MultaSolicitacaoServico multaSolicitacaoServico) {
         this.exemplarServico = exemplarServico;
         this.emprestimoServico = emprestimoServico;
+        this.multaServico = multaServico;
+        this.multaSolicitacaoServico = multaSolicitacaoServico;
 
         setSizeFull();
         setPadding(true);
@@ -115,22 +122,31 @@ public class MultasAdminView extends VerticalLayout implements BeforeEnterObserv
             .setHeader("Início")
             .setAutoWidth(true);
 
-        grid.addColumn(this::calcularDiasComExemplar)
+        grid.addColumn(ex -> {
+                var inicio = ex.getEmprestimo().getPeriodo().getInicio();
+                return multaServico.calcularDiasComExemplar(inicio, LocalDate.now());
+            })
             .setHeader("Dias com o exemplar")
             .setAutoWidth(true);
 
-        grid.addColumn(this::calcularDiasAtraso)
+        grid.addColumn(ex -> {
+                var fimPrevisto = ex.getEmprestimo().getPeriodo().getFim();
+                return multaServico.calcularDiasAtraso(fimPrevisto, hojeParaTeste());
+            })
             .setHeader("Dias em atraso")
             .setAutoWidth(true);
 
-        grid.addColumn(ex -> String.format("R$ %.2f", calcularMulta(ex)))
+        grid.addColumn(ex -> {
+                var fimPrevisto = ex.getEmprestimo().getPeriodo().getFim();
+                double valor = multaServico.calcularMultaPendente(fimPrevisto, hojeParaTeste());
+                return String.format("R$ %.2f", valor);
+            })
             .setHeader("Multa")
             .setAutoWidth(true);
 
         grid.addComponentColumn(ex -> {
-                double multa = calcularMulta(ex);
                 Button confirmar = new Button("Confirmar pagamento & devolver",
-                        e -> confirmarPagamentoEDevolver(ex, multa));
+                        e -> confirmarPagamentoEDevolver(ex));
                 confirmar.getStyle()
                         .set("background-color", "#5CB85C")
                         .set("color", "#F7E9D7")
@@ -148,42 +164,44 @@ public class MultasAdminView extends VerticalLayout implements BeforeEnterObserv
     }
 
     private void carregarMultas() {
-        List<ExemplarResumoExpandido> todosEmprestados = exemplarServico.pesquisarEmprestados();
+        // ✅ Iterator: pega a coleção iterável e (aqui) transforma em List só pra manter seu código igual
+        List<ExemplarResumoExpandido> todosEmprestados =
+                exemplarServico.pesquisarEmprestadosIterable().asList();
 
-        var atrasados = todosEmprestados.stream()
-            .filter(this::estaAtrasado)
+        var atrasadosESolicitados = todosEmprestados.stream()
+            // apenas atrasados
+            .filter(ex -> {
+                var fimPrevisto = ex.getEmprestimo().getPeriodo().getFim();
+                return multaServico.calcularDiasAtraso(fimPrevisto, hojeParaTeste()) > 0;
+            })
+            // e APENAS os que tiveram solicitação de pagamento feita
+            .filter(ex -> {
+                try {
+                    int exemplarId = Integer.parseInt(ex.getId());
+                    return multaSolicitacaoServico.foiSolicitadaParaExemplar(exemplarId);
+                } catch (NumberFormatException e) {
+                    return false;
+                }
+            })
             .toList();
 
-        grid.setItems(atrasados);
+        grid.setItems(atrasadosESolicitados);
     }
 
-    private long calcularDiasComExemplar(ExemplarResumoExpandido ex) {
-        var inicio = ex.getEmprestimo().getPeriodo().getInicio();
-        if (inicio == null) return 0;
-        return ChronoUnit.DAYS.between(inicio, LocalDate.now());
-    }
-
-    private long calcularDiasAtraso(ExemplarResumoExpandido ex) {
-        long dias = calcularDiasComExemplar(ex);
-        return Math.max(0, dias - 7);
-    }
-
-    private boolean estaAtrasado(ExemplarResumoExpandido ex) {
-        return calcularDiasComExemplar(ex) > 7;
-    }
-
-    private double calcularMulta(ExemplarResumoExpandido ex) {
-        long diasAtraso = calcularDiasAtraso(ex);
-        return diasAtraso * 2.50;
-    }
-
-    private void confirmarPagamentoEDevolver(ExemplarResumoExpandido ex, double valorMulta) {
+    private void confirmarPagamentoEDevolver(ExemplarResumoExpandido ex) {
         try {
             String idStr = ex.getId();
             int idInt = Integer.parseInt(idStr);
             ExemplarId exemplarId = new ExemplarId(idInt);
 
+            var fimPrevisto = ex.getEmprestimo().getPeriodo().getFim();
+            double valorMulta = multaServico.calcularMultaPendente(fimPrevisto, hojeParaTeste());
+
+            // devolve direto no serviço de domínio (admin não passa pelo Proxy)
             emprestimoServico.devolver(exemplarId);
+
+            // limpa solicitação desse exemplar
+            multaSolicitacaoServico.limparSolicitacao(idInt);
 
             Notification.show(
                 String.format("Multa de R$ %.2f registrada como paga. Exemplar devolvido.", valorMulta),
@@ -193,8 +211,13 @@ public class MultasAdminView extends VerticalLayout implements BeforeEnterObserv
             carregarMultas();
         } catch (Exception erro) {
             erro.printStackTrace();
-            Notification.show("Erro ao confirmar pagamento/devolver: " + erro.getMessage(), 5000,
-                    Position.MIDDLE);
+            Notification.show("Erro ao confirmar pagamento/devolver: " + erro.getMessage(),
+                    5000, Position.MIDDLE);
         }
     }
+
+    public LocalDate hojeParaTeste() {
+        return LocalDate.now().plusDays(10);  // simula 10 dias de atraso
+    }
+
 }

@@ -38,12 +38,12 @@ public class Socio {
     public String getNome() {
         return nome;
     }
-    
+
     private void setSenha(Password senha) {
-    	notNull(senha, "A senha não pode ser nula");
+        notNull(senha, "A senha não pode ser nula");
         this.senha = senha;
     }
-    
+
     public Password getSenha() {
         return senha;
     }
@@ -55,6 +55,20 @@ public class Socio {
 
     public Email getEmailContato() {
         return emailContato;
+    }
+
+    // ====== MÉTODOS DE EDIÇÃO ======
+
+    public void alterarNome(String novoNome) {
+        setNome(novoNome);
+    }
+
+    public void alterarEmailContato(Email novoEmail) {
+        setEmailContato(novoEmail);
+    }
+
+    public void alterarSenha(Password novaSenha) {
+        setSenha(novaSenha);
     }
 
     @Override

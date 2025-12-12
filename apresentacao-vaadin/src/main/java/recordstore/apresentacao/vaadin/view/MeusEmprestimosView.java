@@ -17,27 +17,35 @@ import com.vaadin.flow.router.BeforeEnterEvent;
 import com.vaadin.flow.router.BeforeEnterObserver;
 import com.vaadin.flow.router.Route;
 
+import org.springframework.beans.factory.annotation.Qualifier;
+
 import recordstore.apresentacao.vaadin.SessaoUsuario;
 import recordstore.apresentacao.vaadin.layout.MainLayout;
 import recordstore.apresentacao.vaadin.login.LoginView;
 import recordstore.aplicacao.acervo.exemplar.ExemplarResumoExpandido;
 import recordstore.aplicacao.acervo.exemplar.ExemplarServicoAplicacao;
-import recordstore.dominio.acervo.exemplar.EmprestimoServico;
+import recordstore.aplicacao.analise.MultaCalculadoraServico;
+import recordstore.dominio.acervo.exemplar.EmprestimoOperacoes;
 import recordstore.dominio.acervo.exemplar.ExemplarId;
 
 @Route(value = "meus-emprestimos", layout = MainLayout.class)
 public class MeusEmprestimosView extends VerticalLayout implements BeforeEnterObserver {
 
     private final ExemplarServicoAplicacao exemplarServico;
-    private final EmprestimoServico emprestimoServico;
+    // AGORA usamos a interface EmprestimoOperacoes (vai cair no PROXY)
+    private final EmprestimoOperacoes emprestimoServico;
+    // Serviço oficial de cálculo de multa
+    private final MultaCalculadoraServico multaServico;
 
     private final Grid<ExemplarResumoExpandido> grid =
             new Grid<>(ExemplarResumoExpandido.class, false);
 
     public MeusEmprestimosView(ExemplarServicoAplicacao exemplarServico,
-                               EmprestimoServico emprestimoServico) {
+                               @Qualifier("emprestimoOperacoes") EmprestimoOperacoes emprestimoServico,
+                               MultaCalculadoraServico multaServico) {
         this.exemplarServico = exemplarServico;
         this.emprestimoServico = emprestimoServico;
+        this.multaServico = multaServico;
 
         setSizeFull();
         setPadding(true);
@@ -93,15 +101,13 @@ public class MeusEmprestimosView extends VerticalLayout implements BeforeEnterOb
                 GridVariant.LUMO_NO_BORDER
         );
 
-        // ===== APENAS ESTILO DA TABELA =====
-        // Fundo claro e texto escuro (header + células)
+        // Estilo da tabela
         grid.getStyle()
                 .set("background-color", "#FFFFFF")
                 .set("border-radius", "12px")
                 .set("border", "1px solid rgba(0,0,0,0.08)")
                 .set("font-size", "0.9rem");
 
-        // Cores de texto do Vaadin (escuro só dentro do grid)
         grid.getElement().getStyle()
                 .set("--lumo-body-text-color", "#2B151C")
                 .set("--lumo-header-text-color", "#2B151C");
@@ -129,15 +135,15 @@ public class MeusEmprestimosView extends VerticalLayout implements BeforeEnterOb
             .setHeader("Dias com o exemplar")
             .setAutoWidth(true);
 
-        // Atraso
+        // Agora "Em atraso" usa a MESMA regra da multa
         grid.addColumn(ex -> estaAtrasado(ex) ? "Sim" : "Não")
-            .setHeader("Em atraso (> 7 dias)")
+            .setHeader("Em atraso")
             .setAutoWidth(true);
 
-        // Multa
+        // Multa usando MultaCalculadoraServico
         grid.addColumn(ex -> {
-                if (estaAtrasado(ex)) {
-                    double multa = calcularMulta(ex);
+                double multa = calcularMulta(ex);
+                if (multa > 0.0) {
                     return String.format("R$ %.2f", multa);
                 }
                 return "-";
@@ -173,8 +179,9 @@ public class MeusEmprestimosView extends VerticalLayout implements BeforeEnterOb
         var socio = SessaoUsuario.getSocio();
         int idSocioLogado = socio.getId().getId();
 
+        // ✅ Iterator: em vez de pegar List direto, pega a coleção iterável
         List<ExemplarResumoExpandido> todosEmprestados =
-                exemplarServico.pesquisarEmprestados();
+                exemplarServico.pesquisarEmprestadosIterable().asList();
 
         var meus = todosEmprestados.stream()
                 .filter(ex -> {
@@ -192,18 +199,23 @@ public class MeusEmprestimosView extends VerticalLayout implements BeforeEnterOb
         return ChronoUnit.DAYS.between(inicio, LocalDate.now());
     }
 
+    // "atrasado" = multa > 0 segundo a MESMA regra usada no resto do sistema
     private boolean estaAtrasado(ExemplarResumoExpandido ex) {
-        return calcularDiasComExemplar(ex) > 7;
+        var fimPrevisto = ex.getEmprestimo().getPeriodo().getFim();
+        if (fimPrevisto == null) return false;
+
+        return multaServico.calcularMultaPendente(fimPrevisto, hoje()) > 0.0;
     }
 
     private double calcularMulta(ExemplarResumoExpandido ex) {
-        long dias = calcularDiasComExemplar(ex);
-        if (dias <= 7) return 0.0;
-        long diasAtraso = dias - 7;
-        return diasAtraso * 2.50;
+        var fimPrevisto = ex.getEmprestimo().getPeriodo().getFim();
+        if (fimPrevisto == null) return 0.0;
+
+        return multaServico.calcularMultaPendente(fimPrevisto, hoje());
     }
 
     private void devolverExemplar(ExemplarResumoExpandido ex) {
+        // Proteção visual da view (primeiro filtro)
         if (estaAtrasado(ex)) {
             Notification.show("Este empréstimo possui multa pendente. Use a tela 'Minhas multas' para pagar.");
             return;
@@ -214,10 +226,14 @@ public class MeusEmprestimosView extends VerticalLayout implements BeforeEnterOb
             int idInt = Integer.parseInt(idStr);
             ExemplarId exemplarId = new ExemplarId(idInt);
 
+            // Vai cair no PROXY (EmprestimoOperacoes)
             emprestimoServico.devolver(exemplarId);
 
             Notification.show("Exemplar devolvido com sucesso!", 3000, Position.TOP_CENTER);
             carregarMeusEmprestimos();
+        } catch (IllegalStateException e) {
+            // Erros de regra de negócio vindos do Proxy
+            Notification.show(e.getMessage(), 5000, Position.MIDDLE);
         } catch (Exception erro) {
             erro.printStackTrace();
             Notification.show("Erro ao devolver exemplar: " + erro.getMessage(), 5000,
@@ -249,4 +265,10 @@ public class MeusEmprestimosView extends VerticalLayout implements BeforeEnterOb
                 .set("font-size", "0.85rem")
                 .set("box-shadow", "0 3px 8px rgba(0,0,0,0.45)");
     }
+
+    private LocalDate hoje() {
+        // MODO TESTE: simular que hoje é 10 dias no futuro
+        return LocalDate.now().plusDays(10);
+    }
+
 }

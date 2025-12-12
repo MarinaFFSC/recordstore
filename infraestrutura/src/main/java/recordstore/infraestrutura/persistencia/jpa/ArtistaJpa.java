@@ -11,9 +11,10 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.Table;
+import jakarta.transaction.Transactional;
 
 import recordstore.aplicacao.acervo.artista.ArtistaRepositorioAplicacao;
-import recordstore.aplicacao.acervo.artista.ArtistaResumo;   // <-- ADICIONA ISSO
+import recordstore.aplicacao.acervo.artista.ArtistaResumo;
 import recordstore.dominio.acervo.artista.Artista;
 import recordstore.dominio.acervo.artista.ArtistaId;
 import recordstore.dominio.acervo.artista.ArtistaRepositorio;
@@ -37,7 +38,6 @@ class ArtistaJpa {
 
 interface ArtistaJpaRepository extends JpaRepository<ArtistaJpa, Integer> {
 
-    // Mantive o método com o mesmo nome que você usou
     List<ArtistaResumo> findArtistaResumoByOrderByNome();
 }
 
@@ -60,6 +60,23 @@ class ArtistaRepositorioImpl implements ArtistaRepositorio, ArtistaRepositorioAp
     public Artista obter(ArtistaId id) {
         var artistaJpa = repositorio.findById(id.getId()).orElseThrow();
         return mapeador.map(artistaJpa, Artista.class);
+    }
+
+    // NOVO: excluir com validação de vínculo com mídias
+    @Transactional
+    @Override
+    public void excluir(ArtistaId id) {
+        var artistaJpa = repositorio.findById(id.getId())
+                .orElseThrow(() -> new IllegalArgumentException(
+                        "Artista não encontrado para o id " + id.getId()));
+
+        // Regra: não deixa excluir se estiver vinculado a alguma mídia
+        if (artistaJpa.midias != null && !artistaJpa.midias.isEmpty()) {
+            throw new IllegalStateException(
+                    "Não é possível excluir o artista pois existem mídias vinculadas a ele.");
+        }
+
+        repositorio.delete(artistaJpa);
     }
 
     @Override

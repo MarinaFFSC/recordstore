@@ -1,7 +1,6 @@
 package recordstore.apresentacao.vaadin.view;
 
 import java.time.LocalDate;
-import java.time.temporal.ChronoUnit;
 import java.util.List;
 
 import com.vaadin.flow.component.button.Button;
@@ -21,17 +20,25 @@ import recordstore.apresentacao.vaadin.layout.MainLayout;
 import recordstore.apresentacao.vaadin.login.LoginView;
 import recordstore.aplicacao.acervo.exemplar.ExemplarResumoExpandido;
 import recordstore.aplicacao.acervo.exemplar.ExemplarServicoAplicacao;
+import recordstore.aplicacao.analise.MultaCalculadoraServico;
+import recordstore.aplicacao.analise.MultaSolicitacaoServico;
 
 @Route(value = "minhas-multas", layout = MainLayout.class)
 public class MinhasMultasView extends VerticalLayout implements BeforeEnterObserver {
 
     private final ExemplarServicoAplicacao exemplarServico;
+    private final MultaCalculadoraServico multaServico;
+    private final MultaSolicitacaoServico multaSolicitacaoServico;
 
     private final Grid<ExemplarResumoExpandido> grid =
             new Grid<>(ExemplarResumoExpandido.class, false);
 
-    public MinhasMultasView(ExemplarServicoAplicacao exemplarServico) {
+    public MinhasMultasView(ExemplarServicoAplicacao exemplarServico,
+                            MultaCalculadoraServico multaServico,
+                            MultaSolicitacaoServico multaSolicitacaoServico) {
         this.exemplarServico = exemplarServico;
+        this.multaServico = multaServico;
+        this.multaSolicitacaoServico = multaSolicitacaoServico;
 
         setSizeFull();
         setPadding(true);
@@ -106,15 +113,25 @@ public class MinhasMultasView extends VerticalLayout implements BeforeEnterObser
             .setHeader("Início")
             .setAutoWidth(true);
 
-        grid.addColumn(this::calcularDiasComExemplar)
+        grid.addColumn(ex -> {
+                var inicio = ex.getEmprestimo().getPeriodo().getInicio();
+                return multaServico.calcularDiasComExemplar(inicio, LocalDate.now());
+            })
             .setHeader("Dias com o exemplar")
             .setAutoWidth(true);
 
-        grid.addColumn(this::calcularDiasAtraso)
+        grid.addColumn(ex -> {
+                var fimPrevisto = ex.getEmprestimo().getPeriodo().getFim();
+                return multaServico.calcularDiasAtraso(fimPrevisto, hojeParaTeste());
+            })
             .setHeader("Dias em atraso")
             .setAutoWidth(true);
 
-        grid.addColumn(ex -> String.format("R$ %.2f", calcularMulta(ex)))
+        grid.addColumn(ex -> {
+                var fimPrevisto = ex.getEmprestimo().getPeriodo().getFim();
+                double valor = multaServico.calcularMultaPendente(fimPrevisto, hojeParaTeste());
+                return String.format("R$ %.2f", valor);
+            })
             .setHeader("Multa")
             .setAutoWidth(true);
 
@@ -122,12 +139,25 @@ public class MinhasMultasView extends VerticalLayout implements BeforeEnterObser
                 Button solicitar = new Button("Solicitar pagamento");
 
                 solicitar.addClickListener(e -> {
-                    Notification.show(
-                        "Solicitação de pagamento enviada. Aguarde o administrador registrar o pagamento.",
-                        5000,
-                        Position.MIDDLE
-                    );
-                    solicitar.setEnabled(false);
+                    try {
+                        int exemplarId = Integer.parseInt(ex.getId());
+
+                        // REGISTRA a solicitação para este exemplar
+                        multaSolicitacaoServico.solicitarParaExemplar(exemplarId);
+
+                        Notification.show(
+                            "Solicitação de pagamento enviada. Aguarde o administrador registrar o pagamento.",
+                            5000,
+                            Position.MIDDLE
+                        );
+                        solicitar.setEnabled(false);
+                    } catch (NumberFormatException erro) {
+                        Notification.show(
+                            "Não foi possível identificar o exemplar para solicitar a multa.",
+                            5000,
+                            Position.MIDDLE
+                        );
+                    }
                 });
 
                 solicitar.getStyle()
@@ -155,37 +185,28 @@ public class MinhasMultasView extends VerticalLayout implements BeforeEnterObser
         var socio = SessaoUsuario.getSocio();
         int idSocio = socio.getId().getId();
 
+        // ✅ Iterator: pega a coleção iterável e (aqui) transforma em List só pra manter seu código igual
         List<ExemplarResumoExpandido> todosEmprestados =
-                exemplarServico.pesquisarEmprestados();
+                exemplarServico.pesquisarEmprestadosIterable().asList();
 
         var minhasMultas = todosEmprestados.stream()
-            .filter(this::estaAtrasado)
+            // só empréstimos do usuário logado
             .filter(ex -> {
                 var tomador = ex.getEmprestimo().getTomador();
                 return tomador != null && tomador.getId() == idSocio;
+            })
+            // apenas os que têm atraso segundo a regra de multa
+            .filter(ex -> {
+                var fimPrevisto = ex.getEmprestimo().getPeriodo().getFim();
+                return multaServico.calcularDiasAtraso(fimPrevisto, hojeParaTeste()) > 0;
             })
             .toList();
 
         grid.setItems(minhasMultas);
     }
 
-    private long calcularDiasComExemplar(ExemplarResumoExpandido ex) {
-        var inicio = ex.getEmprestimo().getPeriodo().getInicio();
-        if (inicio == null) return 0;
-        return ChronoUnit.DAYS.between(inicio, LocalDate.now());
+    public LocalDate hojeParaTeste() {
+        return LocalDate.now().plusDays(10);  // simula 10 dias de atraso
     }
 
-    private long calcularDiasAtraso(ExemplarResumoExpandido ex) {
-        long dias = calcularDiasComExemplar(ex);
-        return Math.max(0, dias - 7);
-    }
-
-    private boolean estaAtrasado(ExemplarResumoExpandido ex) {
-        return calcularDiasComExemplar(ex) > 7;
-    }
-
-    private double calcularMulta(ExemplarResumoExpandido ex) {
-        long diasAtraso = calcularDiasAtraso(ex);
-        return diasAtraso * 2.50;
-    }
 }

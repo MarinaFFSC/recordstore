@@ -21,6 +21,14 @@ public class ExemplarServicoAplicacao {
         return repositorio.pesquisarEmprestados();
     }
 
+    /**
+     * Padrão Iterator:
+     * devolve uma coleção que implementa Iterable, ao invés de expor diretamente a List.
+     */
+    public ExemplaresEmprestados pesquisarEmprestadosIterable() {
+        return new ExemplaresEmprestados(repositorio.pesquisarEmprestados());
+    }
+
     public void criarExemplares(String codigoMidia, int quantidade) {
         repositorio.criarExemplares(codigoMidia, quantidade);
     }

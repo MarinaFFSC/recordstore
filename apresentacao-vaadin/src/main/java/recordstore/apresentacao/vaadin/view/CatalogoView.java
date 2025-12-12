@@ -1,7 +1,6 @@
 package recordstore.apresentacao.vaadin.view;
 
 import java.time.LocalDate;
-import java.time.temporal.ChronoUnit;
 
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.grid.Grid;
@@ -16,6 +15,8 @@ import com.vaadin.flow.router.BeforeEnterObserver;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 
+import org.springframework.beans.factory.annotation.Qualifier;
+
 import recordstore.apresentacao.vaadin.SessaoUsuario;
 import recordstore.apresentacao.vaadin.layout.MainLayout;
 import recordstore.apresentacao.vaadin.login.LoginView;
@@ -26,9 +27,11 @@ import recordstore.aplicacao.acervo.midia.MidiaServicoAplicacao;
 import recordstore.aplicacao.acervo.exemplar.ExemplarServicoAplicacao;
 import recordstore.aplicacao.acervo.exemplar.ExemplarResumoExpandido;
 
+import recordstore.aplicacao.analise.MultaCalculadoraServico;
+
 import recordstore.dominio.administracao.Socio;
 import recordstore.dominio.acervo.midia.CodigoBarraFabrica;
-import recordstore.dominio.acervo.exemplar.EmprestimoServico;
+import recordstore.dominio.acervo.exemplar.EmprestimoOperacoes;
 
 @Route(value = "catalogo", layout = MainLayout.class)
 @PageTitle("Catálogo de mídias | RecordStore")
@@ -36,7 +39,10 @@ public class CatalogoView extends VerticalLayout implements BeforeEnterObserver 
 
     private final MidiaServicoAplicacao midiaServico;
     private final ExemplarServicoAplicacao exemplarServico;
-    private final EmprestimoServico emprestimoServico;
+    // AGORA: usamos a interface que é implementada pelo PROXY
+    private final EmprestimoOperacoes emprestimoServico;
+    // Para usar a mesma regra de multa do backend
+    private final MultaCalculadoraServico multaServico;
 
     private final Grid<MidiaResumoExpandido> grid = new Grid<>(MidiaResumoExpandido.class, false);
 
@@ -44,10 +50,12 @@ public class CatalogoView extends VerticalLayout implements BeforeEnterObserver 
 
     public CatalogoView(MidiaServicoAplicacao midiaServico,
                         ExemplarServicoAplicacao exemplarServico,
-                        EmprestimoServico emprestimoServico) {
+                        @Qualifier("emprestimoOperacoes") EmprestimoOperacoes emprestimoServico,
+                        MultaCalculadoraServico multaServico) {
         this.midiaServico = midiaServico;
         this.exemplarServico = exemplarServico;
         this.emprestimoServico = emprestimoServico;
+        this.multaServico = multaServico;
 
         setSizeFull();
         setPadding(true);
@@ -144,8 +152,13 @@ public class CatalogoView extends VerticalLayout implements BeforeEnterObserver 
 
                 var socio = SessaoUsuario.getSocio();
 
+                // Usa a mesma regra de multa do backend (MultaCalculadoraServico)
                 if (socioTemMulta(socio)) {
-                    Notification.show("Você possui empréstimo em atraso. Devolva seus exemplares antes de fazer um novo empréstimo.");
+                    Notification.show(
+                        "Você possui multa/atraso em empréstimos. Regularize suas multas antes de fazer um novo empréstimo.",
+                        5000,
+                        Position.MIDDLE
+                    );
                     return;
                 }
 
@@ -159,11 +172,15 @@ public class CatalogoView extends VerticalLayout implements BeforeEnterObserver 
                     var codigoBarra = codigoBarraFabrica.construir(codigoMidia);
                     var socioId = socio.getId();
 
+                    // Vai cair no PROXY (EmprestimoServicoProxy)
                     emprestimoServico.realizarEmprestimo(codigoBarra, socioId);
 
                     Notification.show("Empréstimo realizado com sucesso!", 3000, Position.TOP_CENTER);
                     carregarDados();
 
+                } catch (IllegalStateException ex) {
+                    // Mensagem do Proxy (ex.: multa pendente, etc.)
+                    Notification.show(ex.getMessage(), 5000, Position.MIDDLE);
                 } catch (Exception ex) {
                     ex.printStackTrace();
                     Notification.show("Erro ao realizar empréstimo: " + ex.getMessage(),
@@ -191,34 +208,39 @@ public class CatalogoView extends VerticalLayout implements BeforeEnterObserver 
         grid.setItems(itens);
     }
 
+    /**
+     * Verifica se o sócio tem qualquer empréstimo com multa (> 0) usando a mesma
+     * regra do serviço de multa (Strategy).
+     */
     private boolean socioTemMulta(Socio socio) {
         if (socio == null || socio.getId() == null) {
             return false;
         }
 
         int idSocio = socio.getId().getId();
+        LocalDate hoje = LocalDate.now();
 
-        return exemplarServico.pesquisarEmprestados().stream()
-            .anyMatch(ex -> estaAtrasadoDoSocio(ex, idSocio));
+        // ✅ Iterator aplicado aqui (coleção iterável de emprestados)
+        return exemplarServico.pesquisarEmprestadosIterable().stream()
+            // só empréstimos do sócio
+            .filter(ex -> {
+                var emprestimo = ex.getEmprestimo();
+                if (emprestimo == null || emprestimo.getTomador() == null) {
+                    return false;
+                }
+                return emprestimo.getTomador().getId() == idSocio;
+            })
+            // verifica se para esse empréstimo a multa é > 0 segundo a Strategy
+            .anyMatch(ex -> {
+                var fimPrevisto = ex.getEmprestimo().getPeriodo().getFim();
+                if (fimPrevisto == null) return false;
+                double multa = multaServico.calcularMultaPendente(fimPrevisto, hojeParaTeste());
+                return multa > 0.0;
+            });
     }
 
-    private boolean estaAtrasadoDoSocio(ExemplarResumoExpandido ex, int idSocio) {
-        var emprestimo = ex.getEmprestimo();
-        if (emprestimo == null || emprestimo.getTomador() == null) {
-            return false;
-        }
-
-        var tomadorId = emprestimo.getTomador().getId();
-        if (tomadorId != idSocio) {
-            return false;
-        }
-
-        var inicio = emprestimo.getPeriodo().getInicio();
-        if (inicio == null) {
-            return false;
-        }
-
-        long dias = ChronoUnit.DAYS.between(inicio, LocalDate.now());
-        return dias > 7;
+    public LocalDate hojeParaTeste() {
+        return LocalDate.now().plusDays(10);  // simula 10 dias de atraso
     }
+
 }

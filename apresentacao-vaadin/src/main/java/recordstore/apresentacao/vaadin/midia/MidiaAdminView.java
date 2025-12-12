@@ -4,15 +4,18 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import com.vaadin.flow.component.HasStyle;
-import com.vaadin.flow.component.combobox.MultiSelectComboBox;
 import com.vaadin.flow.component.button.Button;
+import com.vaadin.flow.component.combobox.MultiSelectComboBox;
+import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.grid.GridVariant;
 import com.vaadin.flow.component.html.H2;
 import com.vaadin.flow.component.html.H3;
+import com.vaadin.flow.component.html.Paragraph;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.FlexComponent;
+import com.vaadin.flow.component.orderedlayout.HorizontalLayout;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.IntegerField;
 import com.vaadin.flow.component.textfield.TextArea;
@@ -34,7 +37,6 @@ import recordstore.aplicacao.acervo.midia.MidiaServicoAplicacao;
 import recordstore.dominio.acervo.artista.Artista;
 import recordstore.dominio.acervo.artista.ArtistaId;
 import recordstore.dominio.acervo.artista.ArtistaServico;
-import recordstore.dominio.acervo.exemplar.Exemplar;
 import recordstore.dominio.acervo.exemplar.ExemplarRepositorio;
 import recordstore.dominio.acervo.midia.CodigoBarra;
 import recordstore.dominio.acervo.midia.CodigoBarraFabrica;
@@ -46,9 +48,8 @@ import recordstore.dominio.acervo.midia.MidiaRepositorio;
 public class MidiaAdminView extends VerticalLayout implements BeforeEnterObserver {
 
     private final MidiaRepositorio midiaRepositorio;
-    private final ExemplarRepositorio exemplarRepositorio;
-    private final MidiaServicoAplicacao midiaServicoAplicacao;
 
+    private final MidiaServicoAplicacao midiaServicoAplicacao;
     private final ArtistaServico artistaServico;
     private final ArtistaServicoAplicacao artistaServicoAplicacao;
     
@@ -66,7 +67,6 @@ public class MidiaAdminView extends VerticalLayout implements BeforeEnterObserve
                           ArtistaServicoAplicacao artistaServicoAplicacao) {
 
         this.midiaRepositorio = midiaRepositorio;
-        this.exemplarRepositorio = exemplarRepositorio;
         this.midiaServicoAplicacao = midiaServicoAplicacao;
         this.artistaServico = artistaServico;
         this.artistaServicoAplicacao = artistaServicoAplicacao;
@@ -132,27 +132,7 @@ public class MidiaAdminView extends VerticalLayout implements BeforeEnterObserve
         configurarGridMidias();
         secMidias.add(midiasGrid);
 
-        // SEÇÃO EXEMPLARES
-        VerticalLayout secExemplares = new VerticalLayout();
-        secExemplares.setPadding(true);
-        secExemplares.setSpacing(true);
-        secExemplares.setWidthFull();
-        secExemplares.getStyle()
-                .set("background-color", "#28151C")
-                .set("border-radius", "16px")
-                .set("box-shadow", "0 6px 18px rgba(0,0,0,0.55)")
-                .set("border", "1px solid rgba(255,255,255,0.04)")
-                .set("margin-bottom", "0.5rem");
-
-        H3 tituloExemplares = new H3("Exemplares");
-        tituloExemplares.getStyle()
-                .set("color", "#F7E9D7")
-                .set("margin-top", "0")
-                .set("margin-bottom", "0.5rem");
-
-        secExemplares.add(tituloExemplares, criarFormularioExemplar());
-
-        add(secArtistas, secMidias, secExemplares);
+        add(secArtistas, secMidias);
 
         carregarGridArtistas();
         carregarGridMidias();
@@ -231,6 +211,13 @@ public class MidiaAdminView extends VerticalLayout implements BeforeEnterObserve
         artistasGrid.addColumn(ArtistaResumo::getNome)
                 .setHeader("Nome")
                 .setAutoWidth(true);
+
+        // NOVO: coluna de ações
+        artistasGrid.addComponentColumn(this::criarColunaAcoesArtista)
+                .setHeader("Ações")
+                .setAutoWidth(true)
+                .setFlexGrow(0);
+
         artistasGrid.setHeight("220px");
 
         artistasGrid.addThemeVariants(
@@ -247,10 +234,131 @@ public class MidiaAdminView extends VerticalLayout implements BeforeEnterObserve
                 .set("--lumo-header-text-color", "#2B151C");
     }
 
+
     private void carregarGridArtistas() {
         List<ArtistaResumo> artistas = artistaServicoAplicacao.pesquisarResumos();
         artistasGrid.setItems(artistas);
     }
+    
+    private HorizontalLayout criarColunaAcoesArtista(ArtistaResumo resumo) {
+        Button editar = new Button("Editar", e -> abrirDialogEdicaoArtista(resumo));
+        editar.getStyle()
+                .set("background-color", "#3B2730")
+                .set("color", "#F7E9D7")
+                .set("border-radius", "16px")
+                .set("font-size", "0.75rem")
+                .set("padding", "0.2rem 0.6rem")
+                .set("border", "none");
+
+        Button excluir = new Button("Excluir", e -> confirmarExclusaoArtista(resumo));
+        excluir.getStyle()
+                .set("background-color", "#C0392B")
+                .set("color", "white")
+                .set("border-radius", "16px")
+                .set("font-size", "0.75rem")
+                .set("padding", "0.2rem 0.6rem")
+                .set("border", "none");
+
+        HorizontalLayout layout = new HorizontalLayout(editar, excluir);
+        layout.setSpacing(true);
+        return layout;
+    }
+
+    private void abrirDialogEdicaoArtista(ArtistaResumo resumo) {
+        Dialog dialog = new Dialog();
+        dialog.setHeaderTitle("Editar artista #" + resumo.getId());
+
+        TextField nomeField = new TextField("Nome");
+        nomeField.setWidthFull();
+        nomeField.setValue(resumo.getNome() != null ? resumo.getNome() : "");
+        estilizarCampoInput(nomeField);
+
+        VerticalLayout content = new VerticalLayout(nomeField);
+        content.setPadding(false);
+        content.setSpacing(true);
+        dialog.add(content);
+
+        Button cancelar = new Button("Cancelar", e -> dialog.close());
+        cancelar.getStyle()
+                .set("background-color", "transparent")
+                .set("color", "#3B2730");
+
+        Button salvar = new Button("Salvar", e -> {
+            try {
+                String novoNome = nomeField.getValue();
+                if (novoNome == null || novoNome.isBlank()) {
+                    Notification.show("O nome não pode estar em branco.");
+                    return;
+                }
+
+                var artistaId = new ArtistaId(resumo.getId());
+                var artista = artistaServico.obter(artistaId);
+                artista.setNome(novoNome);
+                artistaServico.salvar(artista);
+
+                Notification.show("Artista atualizado com sucesso!");
+                dialog.close();
+                carregarGridArtistas();
+                atualizarArtistasCombo(); // recarrega combo de artistas da seção de mídias
+            } catch (Exception ex) {
+                Notification.show("Erro ao atualizar artista: " + ex.getMessage(),
+                        5000, Notification.Position.MIDDLE);
+            }
+        });
+
+        salvar.getStyle()
+                .set("background-color", "#E85D2A")
+                .set("color", "white")
+                .set("border-radius", "999px")
+                .set("border", "none")
+                .set("padding", "0.3rem 0.9rem");
+
+        dialog.getFooter().add(cancelar, salvar);
+        add(dialog);
+        dialog.open();
+    }
+
+    private void confirmarExclusaoArtista(ArtistaResumo resumo) {
+        Dialog dialog = new Dialog();
+        dialog.setHeaderTitle("Excluir artista");
+
+        Paragraph texto = new Paragraph(
+                "Tem certeza que deseja excluir o artista \"" +
+                resumo.getNome() + "\" (ID " + resumo.getId() + ")?");
+        dialog.add(texto);
+
+        Button cancelar = new Button("Cancelar", e -> dialog.close());
+        cancelar.getStyle()
+                .set("background-color", "transparent")
+                .set("color", "#3B2730");
+
+        Button excluir = new Button("Excluir", e -> {
+            try {
+                var artistaId = new ArtistaId(resumo.getId());
+                artistaServico.excluir(artistaId);
+
+                Notification.show("Artista excluído com sucesso!");
+                dialog.close();
+                carregarGridArtistas();
+                atualizarArtistasCombo();
+            } catch (Exception ex) {
+                Notification.show("Erro ao excluir artista: " + ex.getMessage(),
+                        5000, Notification.Position.MIDDLE);
+            }
+        });
+        excluir.getStyle()
+                .set("background-color", "#C0392B")
+                .set("color", "white")
+                .set("border-radius", "999px")
+                .set("border", "none")
+                .set("padding", "0.3rem 0.9rem");
+
+        dialog.getFooter().add(cancelar, excluir);
+
+        add(dialog);
+        dialog.open();
+    }
+
 
     // ========== MÍDIAS ==========
 
@@ -350,6 +458,11 @@ public class MidiaAdminView extends VerticalLayout implements BeforeEnterObserve
         midiasGrid.addColumn(MidiaResumo::getTitulo).setHeader("Título");
         midiasGrid.addColumn(MidiaResumo::getSubtitulo).setHeader("Subtítulo");
         midiasGrid.addColumn(MidiaResumo::getDescricao).setHeader("Descrição");
+        midiasGrid.addComponentColumn(this::criarColunaAcoes)
+                .setHeader("Ações")
+                .setAutoWidth(true)
+                .setFlexGrow(0);
+
         midiasGrid.setHeight("260px");
 
         midiasGrid.addThemeVariants(
@@ -371,48 +484,72 @@ public class MidiaAdminView extends VerticalLayout implements BeforeEnterObserve
         midiasGrid.setItems(lista);
     }
 
-    // ========== EXEMPLARES ==========
-
-    private FormLayout criarFormularioExemplar() {
-        FormLayout form = new FormLayout();
-        form.setResponsiveSteps(
-                new FormLayout.ResponsiveStep("0", 1),
-                new FormLayout.ResponsiveStep("500px", 2)
+    private HorizontalLayout criarColunaAcoes(MidiaResumo resumo) {
+        Button editar = new Button("Editar", e ->
+                getUI().ifPresent(ui -> ui.navigate("midia/alterar/" + resumo.getId()))
         );
+        editar.getStyle()
+                .set("background-color", "#3B2730")
+                .set("color", "#F7E9D7")
+                .set("border-radius", "16px")
+                .set("font-size", "0.75rem")
+                .set("padding", "0.2rem 0.6rem")
+                .set("border", "none");
 
-        TextField codigoMidiaField = new TextField("Código de barras da mídia (já cadastrada)");
-        codigoMidiaField.setWidthFull();
-        estilizarCampoInput(codigoMidiaField);
+        Button excluir = new Button("Excluir", e -> confirmarExclusaoMidia(resumo));
+        excluir.getStyle()
+                .set("background-color", "#C0392B")
+                .set("color", "white")
+                .set("border-radius", "16px")
+                .set("font-size", "0.75rem")
+                .set("padding", "0.2rem 0.6rem")
+                .set("border", "none");
 
-        Button criarExemplar = new Button("Criar exemplar", e -> {
+        HorizontalLayout layout = new HorizontalLayout(editar, excluir);
+        layout.setSpacing(true);
+        return layout;
+    }
+
+    private void confirmarExclusaoMidia(MidiaResumo resumo) {
+        Dialog dialog = new Dialog();
+        dialog.setHeaderTitle("Excluir mídia");
+
+        Paragraph texto = new Paragraph(
+                "Tem certeza que deseja excluir a mídia \"" +
+                resumo.getTitulo() + "\" (código " + resumo.getId() + ")?");
+        dialog.add(texto);
+
+        Button cancelar = new Button("Cancelar", e -> dialog.close());
+        cancelar.getStyle()
+                .set("background-color", "transparent")
+                .set("color", "#3B2730");
+
+        Button excluir = new Button("Excluir", e -> {
             try {
-                if (codigoMidiaField.isEmpty()) {
-                    Notification.show("Informe o código da mídia.");
-                    return;
-                }
+                CodigoBarra codigo = codigoBarraFabrica.construir(resumo.getId());
+                midiaRepositorio.excluir(codigo);
 
-                CodigoBarra codigoBarra = codigoBarraFabrica.construir(codigoMidiaField.getValue());
-
-                Exemplar exemplar = new Exemplar(codigoBarra, null);
-                exemplarRepositorio.salvar(exemplar);
-
-                Notification.show("Exemplar criado com sucesso!");
-                codigoMidiaField.clear();
+                Notification.show("Mídia excluída com sucesso!");
+                dialog.close();
+                carregarGridMidias();
             } catch (Exception ex) {
-                ex.printStackTrace();
-                Notification.show("Erro ao criar exemplar: " + ex.getMessage(),
+                Notification.show("Erro ao excluir: " + ex.getMessage(),
                         5000, Notification.Position.MIDDLE);
             }
         });
+        excluir.getStyle()
+                .set("background-color", "#C0392B")
+                .set("color", "white")
+                .set("border-radius", "999px")
+                .set("border", "none")
+                .set("padding", "0.3rem 0.9rem");
 
-        estilizarBotaoSecundario(criarExemplar);
+        dialog.getFooter().add(cancelar, excluir);
 
-        form.add(codigoMidiaField, criarExemplar);
-        form.setColspan(codigoMidiaField, 1);
-
-        return form;
+        add(dialog);
+        dialog.open();
     }
-    
+
     private void atualizarArtistasCombo() {
         if (artistasCombo != null) {
             var artistas = artistaServicoAplicacao.pesquisarResumos();
@@ -431,15 +568,6 @@ public class MidiaAdminView extends VerticalLayout implements BeforeEnterObserve
                 .set("border-radius", "999px")
                 .set("margin-top", "0.5rem")
                 .set("box-shadow", "0 4px 10px rgba(0,0,0,0.45)");
-    }
-
-    private void estilizarBotaoSecundario(Button button) {
-        button.getStyle()
-                .set("background-color", "#3B2730")
-                .set("color", "#F7E9D7")
-                .set("font-weight", "500")
-                .set("border-radius", "999px")
-                .set("margin-top", "0.5rem");
     }
 
     // ========== ESTILO DOS INPUTS ==========

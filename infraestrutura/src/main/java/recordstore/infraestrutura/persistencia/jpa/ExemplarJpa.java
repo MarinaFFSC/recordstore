@@ -27,6 +27,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import jakarta.transaction.Transactional;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 
@@ -92,7 +93,10 @@ class ExemplarRepositorioImpl implements ExemplarRepositorio, ExemplarRepositori
     ExemplarJpaRepository repositorio;
 
     @Autowired
-    MidiaJpaRepository midiaRepositorio;   // <-- ADICIONA ISSO
+    MidiaJpaRepository midiaRepositorio;
+
+    @Autowired
+    EmprestimoRegistroJpaRepository emprestimoRegistroRepositorio; // <<< ADD
 
     @Autowired
     JpaMapeador mapeador;
@@ -125,10 +129,6 @@ class ExemplarRepositorioImpl implements ExemplarRepositorio, ExemplarRepositori
         return repositorio.findExemplarResumoExpandidoByEmprestimoIsNotNull();
     }
 
-    // ============================
-    // NOVOS MÉTODOS
-    // ============================
-
     @Override
     public void criarExemplares(String codigoMidia, int quantidade) {
         var midiaJpa = midiaRepositorio.findById(codigoMidia)
@@ -143,12 +143,16 @@ class ExemplarRepositorioImpl implements ExemplarRepositorio, ExemplarRepositori
     }
 
     @Override
+    @Transactional
     public void removerPorIds(List<String> ids) {
         var intIds = ids.stream()
                 .map(Integer::parseInt)
                 .toList();
 
-        // método padrão do JpaRepository
+        // 1) Remove os registros que referenciam os exemplares
+        emprestimoRegistroRepositorio.deleteByExemplarIds(intIds);
+
+        // 2) Remove os exemplares
         repositorio.deleteAllById(intIds);
     }
 }
