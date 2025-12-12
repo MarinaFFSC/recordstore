@@ -16,8 +16,12 @@ O sistema tem como objetivo gerenciar acervo físico de mídias musicais, permit
 - Controle de Empréstimos: Processos de locação, devolução, reservas e cálculo automático de multas.  
 - Gestão de Usuários: Cadastro, aprovação e bloqueio de clientes.  
 
+#### Apresentação - Canva
 https://www.canva.com/design/DAG2Dbp-Xrw/KDwSES5gceaxJBfvD2pDIw/view?utm_content=DAG2Dbp-Xrw&utm_campaign=designshare&utm_medium=link2&utm_source=uniquelinks&utlId=h8281444297
 
-PROTÓTIPO (FIGMA):
+#### Protótipo - FIGMA
 https://www.figma.com/design/TM3M17MpYg7xxGHuBtwaS5/Requisitos-e-Valida%C3%A7%C3%A3o-Software?node-id=0-1&p=f
+
+#### Drive Documentação
+https://drive.google.com/drive/folders/1Kl6AK6LYR0uapOnbydTWwRVs9KUbvOV1?usp=drive_link
 
