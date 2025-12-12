@@ -99,8 +99,8 @@ public class MainLayout extends AppLayout {
                 .set("padding-top", "0.75rem")
                 .set("padding-bottom", "1.5rem");
 
-        // ---------- Seção principal (usuário) ----------
-        Span clienteTitle = new Span("Área do cliente");
+        // Seção principal (usuário)
+        Span clienteTitle = new Span("Área do sócio");
         clienteTitle.getStyle()
                 .set("color", "#F7E9D7")
                 .set("font-weight", "600")
@@ -121,7 +121,7 @@ public class MainLayout extends AppLayout {
 
         menu.add(clienteTitle, dashboard, catalogo, meusEmprestimos, minhasMultas);
 
-        // ---------- Seção admin ----------
+        // Seção admin 
         if (SessaoUsuario.isAdmin()) {
             Span adminTitle = new Span("Administração");
             adminTitle.getStyle()
