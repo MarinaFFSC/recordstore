@@ -131,14 +131,14 @@ public class MultasAdminView extends VerticalLayout implements BeforeEnterObserv
 
         grid.addColumn(ex -> {
                 var fimPrevisto = ex.getEmprestimo().getPeriodo().getFim();
-                return multaServico.calcularDiasAtraso(fimPrevisto, hojeParaTeste());
+                return multaServico.calcularDiasAtraso(fimPrevisto, LocalDate.now());
             })
             .setHeader("Dias em atraso")
             .setAutoWidth(true);
 
         grid.addColumn(ex -> {
                 var fimPrevisto = ex.getEmprestimo().getPeriodo().getFim();
-                double valor = multaServico.calcularMultaPendente(fimPrevisto, hojeParaTeste());
+                double valor = multaServico.calcularMultaPendente(fimPrevisto, LocalDate.now());
                 return String.format("R$ %.2f", valor);
             })
             .setHeader("Multa")
@@ -172,7 +172,7 @@ public class MultasAdminView extends VerticalLayout implements BeforeEnterObserv
             // apenas atrasados
             .filter(ex -> {
                 var fimPrevisto = ex.getEmprestimo().getPeriodo().getFim();
-                return multaServico.calcularDiasAtraso(fimPrevisto, hojeParaTeste()) > 0;
+                return multaServico.calcularDiasAtraso(fimPrevisto, LocalDate.now()) > 0;
             })
             // e APENAS os que tiveram solicitação de pagamento feita
             .filter(ex -> {
@@ -195,7 +195,7 @@ public class MultasAdminView extends VerticalLayout implements BeforeEnterObserv
             ExemplarId exemplarId = new ExemplarId(idInt);
 
             var fimPrevisto = ex.getEmprestimo().getPeriodo().getFim();
-            double valorMulta = multaServico.calcularMultaPendente(fimPrevisto, hojeParaTeste());
+            double valorMulta = multaServico.calcularMultaPendente(fimPrevisto,LocalDate.now());
 
             // devolve direto no serviço de domínio (admin não passa pelo Proxy)
             emprestimoServico.devolver(exemplarId);

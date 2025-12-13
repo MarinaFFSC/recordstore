@@ -234,7 +234,7 @@ public class CatalogoView extends VerticalLayout implements BeforeEnterObserver 
             .anyMatch(ex -> {
                 var fimPrevisto = ex.getEmprestimo().getPeriodo().getFim();
                 if (fimPrevisto == null) return false;
-                double multa = multaServico.calcularMultaPendente(fimPrevisto, hojeParaTeste());
+                double multa = multaServico.calcularMultaPendente(fimPrevisto, LocalDate.now());
                 return multa > 0.0;
             });
     }

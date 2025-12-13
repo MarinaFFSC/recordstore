@@ -204,14 +204,14 @@ public class MeusEmprestimosView extends VerticalLayout implements BeforeEnterOb
         var fimPrevisto = ex.getEmprestimo().getPeriodo().getFim();
         if (fimPrevisto == null) return false;
 
-        return multaServico.calcularMultaPendente(fimPrevisto, hoje()) > 0.0;
+        return multaServico.calcularMultaPendente(fimPrevisto, LocalDate.now()) > 0.0;
     }
 
     private double calcularMulta(ExemplarResumoExpandido ex) {
         var fimPrevisto = ex.getEmprestimo().getPeriodo().getFim();
         if (fimPrevisto == null) return 0.0;
 
-        return multaServico.calcularMultaPendente(fimPrevisto, hoje());
+        return multaServico.calcularMultaPendente(fimPrevisto, LocalDate.now());
     }
 
     private void devolverExemplar(ExemplarResumoExpandido ex) {
@@ -266,7 +266,7 @@ public class MeusEmprestimosView extends VerticalLayout implements BeforeEnterOb
                 .set("box-shadow", "0 3px 8px rgba(0,0,0,0.45)");
     }
 
-    private LocalDate hoje() {
+    private LocalDate hojeParaTestar() {
         // MODO TESTE: simular que hoje é 10 dias no futuro
         return LocalDate.now().plusDays(10);
     }

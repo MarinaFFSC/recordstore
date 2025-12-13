@@ -122,14 +122,14 @@ public class MinhasMultasView extends VerticalLayout implements BeforeEnterObser
 
         grid.addColumn(ex -> {
                 var fimPrevisto = ex.getEmprestimo().getPeriodo().getFim();
-                return multaServico.calcularDiasAtraso(fimPrevisto, hojeParaTeste());
+                return multaServico.calcularDiasAtraso(fimPrevisto, LocalDate.now());
             })
             .setHeader("Dias em atraso")
             .setAutoWidth(true);
 
         grid.addColumn(ex -> {
                 var fimPrevisto = ex.getEmprestimo().getPeriodo().getFim();
-                double valor = multaServico.calcularMultaPendente(fimPrevisto, hojeParaTeste());
+                double valor = multaServico.calcularMultaPendente(fimPrevisto, LocalDate.now());
                 return String.format("R$ %.2f", valor);
             })
             .setHeader("Multa")
@@ -198,7 +198,7 @@ public class MinhasMultasView extends VerticalLayout implements BeforeEnterObser
             // apenas os que têm atraso segundo a regra de multa
             .filter(ex -> {
                 var fimPrevisto = ex.getEmprestimo().getPeriodo().getFim();
-                return multaServico.calcularDiasAtraso(fimPrevisto, hojeParaTeste()) > 0;
+                return multaServico.calcularDiasAtraso(fimPrevisto, LocalDate.now()) > 0;
             })
             .toList();
 
