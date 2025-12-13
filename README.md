@@ -87,4 +87,8 @@ Instale:
 
 ### Como Rodar os Testes
 1. Localize a classe runner ( `RunCucumberTest.java` )  
-2. Clique com o botão direito → **Run As -> JUnit**  
+2. Clique com o botão direito → **Run As -> JUnit**
+
+### Como Simular as multas:
+1.Procurar no (Catalogo, MinhasMultas, MultasAdmin, MeusEmprestimos) uma função que possui a linha (fimPrevisto, LocalDate.now())
+2.Trocar o LocalDate.now() por uma função chamada hojeParaTestar(simula 10 dias com o exemplar, ou seja 3 dias de multa)
