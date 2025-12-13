@@ -267,7 +267,8 @@ public class MeusEmprestimosView extends VerticalLayout implements BeforeEnterOb
     }
 
     private LocalDate hojeParaTestar() {
-        // MODO TESTE: simular que hoje é 10 dias no futuro
+    	// simula 10 dias de atraso da multa
+    	// simula 10 dias de atraso da multa
         return LocalDate.now().plusDays(10);
     }
 

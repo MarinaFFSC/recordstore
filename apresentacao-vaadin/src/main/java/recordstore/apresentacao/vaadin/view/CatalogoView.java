@@ -240,7 +240,8 @@ public class CatalogoView extends VerticalLayout implements BeforeEnterObserver 
     }
 
     public LocalDate hojeParaTeste() {
-        return LocalDate.now().plusDays(10);  // simula 10 dias de atraso
+        return LocalDate.now().plusDays(10);  // simula 10 dias de atraso da multa
+     // simula 10 dias de atraso da multa
     }
 
 }
